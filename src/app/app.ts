@@ -1,4 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { LoginService } from './services/spotify-api/login-service';
+import { PlaylistResponse } from './interfaces/playlist-response';
+import { PlaylistService } from './services/spotify-api/playlist-service';
 
 @Component({
   selector: 'app-root',
@@ -6,17 +9,29 @@ import { Component, signal } from '@angular/core';
   standalone: false,
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit{
   protected readonly title = signal('EXAMPLE_APP');
 
-  constructor(){
-    console.log("COMPONENTE APP CREADO");
+  constructor(
+    private _s_LoginService: LoginService,
+    private _s_PlaylistService: PlaylistService
+  ) {  }
+
+  token: string = "";
+  playlist: undefined | PlaylistResponse
+
+  ngOnInit(): void {
+    this._s_LoginService.getAccessToken().subscribe((data)=>{
+      this.token = data.access_token;
+      this._s_PlaylistService.getPlaylist(this.token).subscribe((data)=>{
+        this.playlist = data
+        console.log(this.playlist);
+      })
+    });
+
+
   }
 
-  view = true;
 
-  destroy(){
-    this.view = false;
-  }
 
 }

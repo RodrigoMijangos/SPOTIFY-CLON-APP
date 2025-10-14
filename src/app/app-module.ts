@@ -4,13 +4,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { SongInfo } from './song-info/song-info';
-import { SecondChild } from './second-child/second-child';
+import { AudioController } from './audio-controller/audio-controller';
+import { Playlist } from './playlist/playlist';
+import { Player } from './player/player';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     App,
     SongInfo,
-    SecondChild
+    AudioController,
+    Playlist,
+    Player
   ],
   imports: [
     BrowserModule,
@@ -18,7 +23,8 @@ import { SecondChild } from './second-child/second-child';
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection()
+    provideZonelessChangeDetection(),
+    provideHttpClient(),
   ],
   bootstrap: [App]
 })
