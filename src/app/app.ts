@@ -14,24 +14,18 @@ export class App implements OnInit{
 
   constructor(
     private _s_LoginService: LoginService,
-    private _s_PlaylistService: PlaylistService
   ) {  }
 
   token: string = "";
   playlist: undefined | PlaylistResponse
 
   ngOnInit(): void {
-    this._s_LoginService.getAccessToken().subscribe((data)=>{
-      this.token = data.access_token;
-      this._s_PlaylistService.getPlaylist(this.token).subscribe((data)=>{
-        this.playlist = data
-        console.log(this.playlist);
-      })
-    });
+    this._s_LoginService.getAccessToken().subscribe();
+    };
 
 
   }
 
 
 
-}
+
