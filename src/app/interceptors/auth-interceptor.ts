@@ -10,8 +10,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   return next(req).pipe(
     tap(event => {
       if(!req.url.includes('api/token'))
-        return;
-
+        return event;
       if(event instanceof HttpResponse && event.status === 200){
         const body = event.body as any;
 
@@ -22,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
           _cookieService.setKey('access_token', body.access_token, expirationDate);
         }
       }
-
+      return event;
     })
   );
 };
