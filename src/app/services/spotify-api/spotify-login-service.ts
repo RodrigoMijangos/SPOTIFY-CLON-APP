@@ -16,8 +16,8 @@ export class SpotifyLoginService {
 
     const body = new HttpParams()
       .set('grant_type','client_credentials')
-      .set('client_id','427ffe08ec7f49ebac94d0e35e1ada88')
-      .set('client_secret','2939401163774f67961f147d13ec0fb9');
+      .set('client_id',environment.CLIENT_ID)
+      .set('client_secret',environment.CLIENT_SECRET);
 
     return this._http.post<any>(
       environment.AUTH_API_URL,
