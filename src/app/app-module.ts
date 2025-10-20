@@ -9,6 +9,7 @@ import { Playlist } from './playlist/playlist';
 import { Player } from './player/player';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth-interceptor';
+import { SearchModule } from './search/search-module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { authInterceptor } from './interceptors/auth-interceptor';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SearchModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
