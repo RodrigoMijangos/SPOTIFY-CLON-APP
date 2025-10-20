@@ -10,6 +10,7 @@ import { Player } from './player/player';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { authInterceptor } from './interceptors/auth-interceptor';
+import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { authInterceptor } from './interceptors/auth-interceptor';
     provideZonelessChangeDetection(),
     provideHttpClient(
       withInterceptors([
-        authInterceptor
+        authInterceptor,
+        addAuthHeaderInterceptor
       ])
     ),
     CookieService,

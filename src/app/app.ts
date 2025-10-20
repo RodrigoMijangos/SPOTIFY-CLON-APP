@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { SpotifyLoginService } from './services/spotify-api/spotify-login-service';
 import { SpotifyAlbumService } from './services/spotify-api/spotify-album-service';
+import { CookiesStorageService } from './services/general/cookies-storage-service';
 
 @Component({
   selector: 'app-root',
@@ -11,18 +12,13 @@ import { SpotifyAlbumService } from './services/spotify-api/spotify-album-servic
 export class App implements OnInit{
 
   constructor(
-    private _spotifyLoginService: SpotifyLoginService,
-    private _spotifyAlbumService: SpotifyAlbumService
+    private _spotifyLogin: SpotifyLoginService,
+    private _cookieStorage: CookiesStorageService
   ){}
 
   ngOnInit(): void {
-    this._spotifyLoginService.getAccessToken().subscribe(
-      (data)=> this._spotifyAlbumService.getAlbum(data.access_token)
-        .subscribe(
-          (album_data) => console.log(album_data)
-        )
-      );
-    console.log("API TOKEN OBTENIDO")
+    if(!this._cookieStorage.exists('access_token') || !this._cookieStorage.isCookieValid('access_token'))
+      this._spotifyLogin.getAccessToken().subscribe();
   }
 
 }

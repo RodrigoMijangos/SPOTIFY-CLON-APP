@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { spotify_environments } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class SpotifyLoginService {
       .set('client_secret','2939401163774f67961f147d13ec0fb9');
 
     return this._http.post<any>(
-      spotify_environments.AUTH_API_URL,
+      environment.AUTH_API_URL,
       body.toString(),
       {
         headers: {
