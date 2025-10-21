@@ -8,6 +8,10 @@ import { AudioController } from './audio-controller/audio-controller';
 import { Playlist } from './playlist/playlist';
 import { Player } from './player/player';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+<<<<<<< HEAD
+=======
+import { CookieService } from 'ngx-cookie-service';
+>>>>>>> origin/develop
 import { authInterceptor } from './interceptors/auth-interceptor';
 
 @NgModule({
@@ -30,6 +34,10 @@ import { authInterceptor } from './interceptors/auth-interceptor';
         authInterceptor
       ])
     ),
+<<<<<<< HEAD
+=======
+    CookieService,
+>>>>>>> origin/develop
   ],
   bootstrap: [App]
 })

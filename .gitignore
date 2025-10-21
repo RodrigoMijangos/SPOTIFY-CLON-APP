@@ -44,4 +44,8 @@ Thumbs.db
 /public/media
 /public/font-awesome
 
+<<<<<<< HEAD
 /src/environments/*.local.ts
+=======
+/src/environments
+>>>>>>> origin/develop

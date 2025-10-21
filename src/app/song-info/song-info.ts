@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Song } from '../interfaces/song';
 
 @Component({
