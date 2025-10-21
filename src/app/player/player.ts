@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { Song } from '../interfaces/song';
+import { Component, OnInit } from '@angular/core';
+import { SpotifyAlbumService } from '../services/spotify-api/spotify-album-service';
+import { Album } from '../interfaces/album';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-player',
@@ -7,60 +9,17 @@ import { Song } from '../interfaces/song';
   templateUrl: './player.html',
   styleUrl: './player.css'
 })
-export class Player {
+export class Player implements OnInit{
 
-  song = {
-    cover: "https://picsum.photos/200",
-    name: "CANCION 1",
-    artist: "ARTISTA 1"
+  album$: Observable<Album>
+
+  constructor(
+    private _spotifyAlbum: SpotifyAlbumService
+  ){
+    this.album$ = this._spotifyAlbum.getAlbum('4aawyAB9vmqN3uQ7FjRGTy')
   }
 
-  playlist: Song[] = [
-    {
-      cover: "https://picsum.photos/201",
-      name: "CANCION 1 ESTE TEXTO ES DEMASIADO LARGO",
-      artist: "ARTISTA 1"
-    },
-    {
-      cover: "https://picsum.photos/202",
-      name: "CANCION 2",
-      artist: "ARTISTA 1"
-    },
-    {
-      cover: "https://picsum.photos/203",
-      name: "CANCION 3",
-      artist: "ARTISTA 1"
-    },
-    {
-      cover: "https://picsum.photos/204",
-      name: "CANCION 4",
-      artist: "ARTISTA 1"
-    },
-    {
-      cover: "https://picsum.photos/205",
-      name: "CANCION 5",
-      artist: "ARTISTA 1"
-    },
-    {
-      cover: "https://picsum.photos/206",
-      name: "CANCION 6",
-      artist: "ARTISTA 1"
-    },
-    {
-      cover: "https://picsum.photos/207",
-      name: "CANCION 7",
-      artist: "ARTISTA 1"
-    },
-    {
-      cover: "https://picsum.photos/208",
-      name: "CANCION 8",
-      artist: "ARTISTA 1"
-    },
-  ];
-
-  constructor(){
-    console.log("COMPONENTE APP CREADO");
+  ngOnInit(): void {
   }
-
 
 }
