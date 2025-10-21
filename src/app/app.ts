@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { LoginService } from './services/spotify-api/login-service';
-import { PlaylistResponse } from './interfaces/playlist-response';
+import { PlaylistResponse } from './interfaces/album';
 import { PlaylistService } from './services/spotify-api/playlist-service';
 
 @Component({

@@ -8,8 +8,9 @@ import { AudioController } from './audio-controller/audio-controller';
 import { Playlist } from './playlist/playlist';
 import { Player } from './player/player';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 import { authInterceptor } from './interceptors/auth-interceptor';
-import { SearchModule } from './search/search-module';
+import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
 
 @NgModule({
   declarations: [
@@ -21,19 +22,18 @@ import { SearchModule } from './search/search-module';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    SearchModule
+    AppRoutingModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideHttpClient(
-      withInterceptors(
-        [
-          authInterceptor
-        ]
-      )
+      withInterceptors([
+        authInterceptor,
+        addAuthHeaderInterceptor
+      ])
     ),
+    CookieService,
   ],
   bootstrap: [App]
 })

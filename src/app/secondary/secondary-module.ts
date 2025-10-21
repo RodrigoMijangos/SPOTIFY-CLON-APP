@@ -6,7 +6,6 @@ import { FirstChild } from './first-child/first-child';
 import { SecondChild } from './second-child/second-child';
 
 
-
 @NgModule({
   declarations: [
     HomeChild,
@@ -16,6 +15,6 @@ import { SecondChild } from './second-child/second-child';
   ],
   imports: [
     CommonModule
-  ]
+]
 })
 export class SecondaryModule { }

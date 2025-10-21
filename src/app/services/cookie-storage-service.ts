@@ -1,29 +1,33 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CookieStorageService {
-
+export class CookiesStorageService {
+  
   constructor(
     private _cookieService: CookieService
   ){}
 
-  getCookie(key: string): string{
+  setKey(key: string, value: string, expires: number | Date | undefined): void{
+    this._cookieService.set(key, value, expires)
+  }
+
+  getKeyValue(key: string): string{
     return this._cookieService.get(key);
   }
 
-  setCookie(key: string, value: string, expires: number | Date | undefined = undefined): void{
-    this._cookieService.set(key,value, expires);
+  exists(key: string): boolean{
+    return this._cookieService.check(key);
   }
 
-  deleteCookie(key:string): void{
+  isCookieValid(key: string): boolean{
+    return this._cookieService.get(key) !== '';
+  }
+
+  deleteKeyValue(key: string): void{
     this._cookieService.delete(key);
   }
 
-  isCookieValid(key: string): boolean {
-    return this._cookieService.check(key);
-  }
 }

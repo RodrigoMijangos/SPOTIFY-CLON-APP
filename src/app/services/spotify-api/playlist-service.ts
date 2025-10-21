@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PlaylistResponse } from '../../interfaces/playlist-response';
+import { PlaylistResponse } from '../../interfaces/album';
 
 @Injectable({
   providedIn: 'root'
