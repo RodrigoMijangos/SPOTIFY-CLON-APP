@@ -9,8 +9,9 @@ const routes: Routes = [
     title: 'Player'
   },
   {
-    path: '/search',
-    component: SongDisplay
+    path: 'player/search', // a donde
+    component: SongDisplay,
+    children: 
   }
 ];
 
