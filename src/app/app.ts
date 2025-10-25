@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { LoginService } from './services/spotify-api/login-service';
-import { PlaylistResponse } from './interfaces/album';
+import { Album } from './interfaces/album';
 import { PlaylistService } from './services/spotify-api/playlist-service';
 
 @Component({
@@ -18,7 +18,7 @@ export class App implements OnInit{
   ) {  }
 
   token: string = "";
-  playlist: undefined | PlaylistResponse
+  playlist: undefined | Album;
 
   ngOnInit(): void {
     this._s_LoginService.getAccessToken().subscribe();

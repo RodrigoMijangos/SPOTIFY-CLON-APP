@@ -30,4 +30,19 @@ export class CookiesStorageService {
     this._cookieService.delete(key);
   }
 
+  getCookie(key: string): string {
+    return this._cookieService.get(key);
+  }
+
+  setCookie(key: string, value: string, expireDate?: Date): void {
+    if (expireDate) {
+      this._cookieService.set(key, value, expireDate);
+    } else {
+      this._cookieService.set(key, value);
+    }
+  }
+
+  deleteCookie(key: string): void {
+    this._cookieService.delete(key);
+  }
 }

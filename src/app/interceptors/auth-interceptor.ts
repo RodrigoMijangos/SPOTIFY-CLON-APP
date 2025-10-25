@@ -1,12 +1,12 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { HttpEventType } from '@angular/common/http';
-import { CookieStorageService } from '../services/cookie-storage-service';
+import { CookiesStorageService } from '../services/cookie-storage-service';
 import {inject} from '@angular/core'
 import { tap} from 'rxjs'
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
-  const _cookieService: CookieStorageService = inject (CookieStorageService) //inyectar servicios desde la capa principal
+  const _cookieService: CookiesStorageService = inject (CookiesStorageService) //inyectar servicios desde la capa principal
   const TOKEN_URL = '/api/token';
 
   //modificar la respuesta

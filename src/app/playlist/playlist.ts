@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
-import { Song } from '../interfaces/song';
+import { Track } from '../interfaces/track';
+import { Image } from '../interfaces/image';
 
 @Component({
   selector: 'app-playlist',

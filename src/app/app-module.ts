@@ -10,7 +10,7 @@ import { Player } from './player/player';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { authInterceptor } from './interceptors/auth-interceptor';
-import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
+import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-in
     provideHttpClient(
       withInterceptors([
         authInterceptor,
-        addAuthHeaderInterceptor
+        addAuthLeaderInterceptor
       ])
     ),
     CookieService,

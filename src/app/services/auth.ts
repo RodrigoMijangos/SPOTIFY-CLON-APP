@@ -3,14 +3,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError, tap, catchError } from 'rxjs';
-import { CookieStorageService } from './cookie-storage-service'; // Asegúrate de la ruta correcta
+import { CookiesStorageService } from './cookie-storage-service'; // Asegúrate de la ruta correcta
 
 @Injectable({
   providedIn: 'root' // disponible en toda la aplicación
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private cookieService = inject(CookieStorageService);
+  private cookieService = inject(CookiesStorageService);
   private readonly REFRESH_ENDPOINT = 'https://accounts.spotify.com/api/token/refresh'; 
 
   isRefreshing = false; 
@@ -65,6 +65,5 @@ export class AuthService {
     this.cookieService.deleteCookie('access_token');
     this.cookieService.deleteCookie('refresh_token'); 
     
-    //logica para enviar al usuario a la pantalla de login, mañana zzzz
   }
 }
