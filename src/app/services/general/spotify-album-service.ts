@@ -2,15 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SpotifyAlbumResponse } from '../../interfaces/spotify-api/spotify-album-response';
 import { map, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { Album } from '../../interfaces/album';
 import { Track } from '../../interfaces/track';
 import { Image } from '../../interfaces/image';
+import { EnvironmentConfig } from 'src/environments/environment.interface';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyAlbumService {
+
+  private env : EnvironmentConfig = environment as EnvironmentConfig;
 
   constructor(
     private _http:HttpClient
@@ -18,7 +22,7 @@ export class SpotifyAlbumService {
 
   getAlbum(id: string): Observable<Album>{
     return this._http.get<SpotifyAlbumResponse>(
-      `${environment.API_URL}/albums/${id}`
+      `${this.env.API_URL}/albums/${id}`
     ).pipe(
       map(
         apiresponse => {
