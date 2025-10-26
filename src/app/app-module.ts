@@ -11,6 +11,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interceptor';
+import { debugInterceptor } from './interceptors/debug-interceptor-interceptor';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interce
     provideZonelessChangeDetection(),
     provideHttpClient(
       withInterceptors([
+        debugInterceptor,
         authInterceptor,       
         addAuthLeaderInterceptor
       ])

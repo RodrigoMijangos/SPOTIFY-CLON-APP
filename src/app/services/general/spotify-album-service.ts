@@ -6,7 +6,6 @@ import { environment } from 'src/environments/environment';
 import { Album } from '../../interfaces/album';
 import { Track } from '../../interfaces/track';
 import { Image } from '../../interfaces/image';
-import { EnvironmentConfig } from 'src/environments/environment.interface';
 
 
 @Injectable({
@@ -14,7 +13,7 @@ import { EnvironmentConfig } from 'src/environments/environment.interface';
 })
 export class SpotifyAlbumService {
 
-  private env : EnvironmentConfig = environment as EnvironmentConfig;
+  private env = environment;
 
   constructor(
     private _http:HttpClient
@@ -22,7 +21,7 @@ export class SpotifyAlbumService {
 
   getAlbum(id: string): Observable<Album>{
     return this._http.get<SpotifyAlbumResponse>(
-      `${this.env.API_URL}/albums/${id}`
+      `${environment.API_URL}/albums/${id}`
     ).pipe(
       map(
         apiresponse => {

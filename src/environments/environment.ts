@@ -1,6 +1,4 @@
-import { EnvironmentConfig } from './environment.interface';
-
-export const environment: EnvironmentConfig = {
+export const environment = {
     production: false,
     API_URL: 'https://api.spotify.com/v1',
     CLIENT_ID: '7b214661a2564a1f88e257b87b4590ef',
