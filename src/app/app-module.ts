@@ -29,7 +29,7 @@ import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interce
     provideZonelessChangeDetection(),
     provideHttpClient(
       withInterceptors([
-        authInterceptor,
+        authInterceptor,       
         addAuthLeaderInterceptor
       ])
     ),

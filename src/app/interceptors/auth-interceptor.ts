@@ -1,42 +1,42 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { HttpEventType } from '@angular/common/http';
 import { CookiesStorageService } from '../services/cookie-storage-service';
-import {inject} from '@angular/core'
-import { tap} from 'rxjs'
+import { inject } from '@angular/core'
+import { tap } from 'rxjs'
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
-  const _cookieService: CookiesStorageService = inject (CookiesStorageService) //inyectar servicios desde la capa principal
-  const TOKEN_URL = '/api/token';
+  const _cookieService: CookiesStorageService = inject(CookiesStorageService);
+  const TOKEN_URL = 'accounts.spotify.com/api/token'; // ✅ Cambié esto
 
-  //modificar la respuesta
   return next(req).pipe(
     tap(
       event => {
         
-        if(!req.url.includes(TOKEN_URL))
-          return next(req);
-
-        if(event.type !== HttpEventType.Response || !event.body){
-            return  next(req);// si hay una respuesta cachala 
+        // ✅ Si NO es la URL del token, no hagas nada
+        if (!req.url.includes(TOKEN_URL)) {
+          return;
         }
 
-        const body = event.body as any; //no se que hay pero castealo como ese any y ya me ahorro saber que tipo de dato viene
+        if (event.type !== HttpEventType.Response || !event.body) {
+          return;
+        }
 
-        if(!body || !body.access_token){
-            return next(req);
-        }    
+        const body = event.body as any;
 
-        const expireTimeMS = 60*60*1000;
-        const expireDate = new Date(Date.now()+expireTimeMS);
+        if (!body || !body.access_token) {
+          return;
+        }
 
-        _cookieService.setCookie('access_token', body.access_token, expireDate) 
+        const expireTimeMS = 60 * 60 * 1000;
+        const expireDate = new Date(Date.now() + expireTimeMS);
+
+        _cookieService.setCookie('access_token', body.access_token, expireDate);
         
-        if(body.refresh_token){
-          _cookieService.setCookie('refresh_token', body.refresh_token)
-        }// rastrear TODO
-      
-        return event; // siempre hay q retornar algo usando ek event poipiip
-      })
+        if (body.refresh_token) {
+          _cookieService.setCookie('refresh_token', body.refresh_token, expireDate);
+        }
+      }
+    )
   );
 };
