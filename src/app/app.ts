@@ -21,14 +21,8 @@ export class App implements OnInit {
   ngOnInit(): void {
     this._s_LoginService.getAccessToken().subscribe({
       next: (response) => {
-        console.log('✅ Token obtenido exitosamente:', response);
         this.token = response.access_token;
-      },
-      error: (error) => {
-        console.error('❌ Error completo:', error);
-        console.error('❌ Status:', error.status);
-        console.error('❌ Message:', error.message);
-        console.error('❌ Error body:', error.error);
+        localStorage.setItem('spotify_access_token', this.token);
       }
     });
   }

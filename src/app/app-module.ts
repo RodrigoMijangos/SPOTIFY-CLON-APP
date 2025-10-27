@@ -11,6 +11,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interceptor';
+import { Navbar } from './navbar/navbar';
+import { Album } from './album/album';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interce
     SongInfo,
     AudioController,
     Playlist,
-    Player
+    Player,
+    Navbar,
+    Album
   ],
   imports: [
     BrowserModule,

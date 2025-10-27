@@ -19,6 +19,7 @@ export class SpotifyAlbumService {
     private _http:HttpClient
   ){}
 
+
   getAlbum(id: string): Observable<Album>{
     return this._http.get<SpotifyAlbumResponse>(
       `${environment.API_URL}/albums/${id}`
