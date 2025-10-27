@@ -6,5 +6,6 @@ export interface Track {
     artists: {
         id: string,
         name: string
-    }[]
+    }[],
+    cover?: string
 }
