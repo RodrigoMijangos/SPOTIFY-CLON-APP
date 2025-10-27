@@ -1,1 +1,9 @@
-<p>album works!</p>
+<section class="recommended-section">
+    <h2>WE THINK ABOUT YOU...</h2>
+    <div class="albums-grid">
+        <div class="album-card" *ngFor="let album of recommendedAlbums">
+            <img [src]="album.images[0]?.url" [alt]="album.name">
+            <p class="album-name">{{ album.name }}</p>
+        </div>
+    </div>
+</section>
