@@ -1,7 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { LoginService } from './services/spotify-api/login-service';
 import { Album } from './interfaces/album';
-import { PlaylistService } from './services/spotify-api/playlist-service';
+import { SpotifyLoginService } from './services/general/spotify-login-service';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +12,7 @@ export class App implements OnInit {
   protected readonly title = signal('EXAMPLE_APP');
 
   constructor(
-    private _s_LoginService: LoginService,
-    private _s_PlaylistService: PlaylistService
+    private _s_LoginService: SpotifyLoginService
   ) { }
 
   token: string = "";
