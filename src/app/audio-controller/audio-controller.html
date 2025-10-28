@@ -1,25 +1,24 @@
-<audio controls hidden></audio>
-
 <div class="controls">
-    
+
+    <audio #audio hidden></audio>
+
+
     <div class="player-buttons">
         <span class="back" (click)="playPrevious()">
             <i class="fa-solid fa-backward-step"></i>
         </span>
         <span class="play" (click)="togglePlay()">
-            <i class="fa-solid fa-play"></i>
+            <i class="fa-solid fa-play" [class.fa-play]="!isPlaying()" [class.fa-pause]="isPlaying()"></i>
         </span>
         <span class="next" (click)="playNext()">
             <i class="fa-solid fa-forward-step"></i>
         </span>
     </div>
 
-    <input 
-    type="range" 
-    id="control-bar"
-    min="0" 
-    max="100" 
-    [value] = "progress()"
-    (input)="seekTo($event)"
-    >
+    <div class="progress-section">
+        <span class="time">{{ formatTime(currentTime())}}</span>
+        <input type="range" id="control-bar" min="0" class="progress-bar" max="100" [value]="progress()"
+            (input)="seekTo($event)">
+        <span class="time">{{ formatTime(duration())}}</span>
+    </div>
 </div>

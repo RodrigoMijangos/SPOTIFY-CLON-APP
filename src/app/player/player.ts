@@ -8,10 +8,11 @@ import { Track } from '../interfaces/track';
 
 @Component({
   selector: 'app-player',
+  standalone : false,
   templateUrl: './player.html',
   styleUrl: './player.css'
 })
-export class PlayerComponent implements OnInit {
+export class Player implements OnInit {
   randomAlbums: Album[] = [];  
   featuredAlbum?: Album;  
   playlist: Track[] = [];  

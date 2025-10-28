@@ -18,14 +18,14 @@ import { Album } from './album/album';
     App,
     SongInfo,
     AudioController,
-    Player,
     Navbar,
-    Album
+    Album,
+    Player
   ],
   imports: [
     BrowserModule,
     AppRoutingModule
-  ],
+],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),

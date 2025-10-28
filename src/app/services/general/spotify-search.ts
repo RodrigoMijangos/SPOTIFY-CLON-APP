@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Track } from '../../interfaces/track';
+import {SpotifySearchResponse} from 'src/app/interfaces/spotify-api/spotify-search-response';
 
 
 @Injectable({
@@ -18,7 +19,7 @@ export class SpotifySearchService {
       .set('type', 'track')
       .set('limit', limit.toString());
 
-    return this._http.get<Track>(
+    return this._http.get<SpotifySearchResponse>(
       `${environment.API_URL}/search`,
       { params }
     ).pipe(
@@ -32,7 +33,7 @@ export class SpotifySearchService {
             id: artist.id,
             name: artist.name
           })),
-          cover: track.album.images[0]?.url || ''
+          cover: track.album?.images[0]?.url || ''
         }))
       )
     );
@@ -50,7 +51,7 @@ export class SpotifySearchService {
       .set('limit', '50')
       .set('offset', randomOffset.toString());
 
-    return this._http.get<Track>(
+    return this._http.get<SpotifySearchResponse>(
       `${environment.API_URL}/search`,
       { params }
     ).pipe(
@@ -68,7 +69,7 @@ export class SpotifySearchService {
             id: artist.id,
             name: artist.name
           })),
-          cover: track.album.images[0]?.url || ''
+          cover: track.album?.images[0]?.url || ''
         };
       })
     );
