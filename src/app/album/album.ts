@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './album.css'
 })
 export class Album {
-
+  
 }

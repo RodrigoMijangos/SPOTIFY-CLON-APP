@@ -1,15 +1,15 @@
-<aside>
-    <img src="{{cover()?.url}}" alt="" class="card-song-img">
-    <div class="card-song-details">
-        <h1 class="card-song-title">{{song()?.name}}</h1>
-        <h3 class="card-song-artist">{{song()?.artists?.at(0)?.name}}</h3>
-    </div>
-</aside>
+<div>
+  <img src="{{cover()?.url}}" alt="" class="card-song-img">
+  <div class="card-song-details">
+    <h1 class="card-song-title">{{song()?.name}}</h1>
+    <h3 class="card-song-artist">{{song()?.artists?.at(0)?.name}}</h3>
+  </div>
+</div>
 
-    <aside class="right-section" *ngIf="highlightAlbum">
-      <div class="highlight-album">
-        <img src={{cover()?.url}} [alt]="{song()?.artist?.at(0)?.name}" class="highlight-album-img">
-        <h3>{{song()?.name}}</h3>
-        <p class="artist">{{song()?.artists?.at(0)?.name}}</p>
-      </div>
-    </aside>
+<div class="right-section" *ngIf="">
+  <div class="highlight-album">
+    <img src={{cover()?.url}} [alt]="" class="highlight-album-img">
+    <h3>{{song()?.name}}</h3>
+    <p class="artist">{{song()?.artists?.at(0)?.name}}</p>
+  </div>
+</div>

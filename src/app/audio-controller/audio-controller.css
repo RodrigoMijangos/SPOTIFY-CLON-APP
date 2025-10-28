@@ -1,25 +1,81 @@
-:host{
-    width: 100%;
-    height: 100px;
-    margin-top: 15px;
+.controls {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    gap: 8px;
+    background-color: #242700;
+    padding: 20px 0;
 }
 
-#control-bar{
-    width: 70%;
-}
-
-.player-buttons{
-    width: 50%;
-    height: 100%;
+.player-buttons {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: center;
+    color: #fff;
 }
 
-.player-buttons span i{
-    font-size: 2em;
+.back,
+.play,
+.next {
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.play i {
+    font-size: 20px;
+}
+
+.back i,
+.next i {
+    font-size: 20px;
+}
+
+input {
+    width: 500px;
+    align-self: center;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    cursor: pointer;
+    outline: none;
+    background-color: #303030;
+    border-radius: 10px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    background-color: #fff;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: 0px;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.1s ease-in-out;
+    border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    border: none;
+    transition: 0.1s ease-in-out;
+}
+
+input[type="range"]::-moz-range-progress {
+    background-color: #ffffff;
+    border-radius: 8px;
+    height: 8px;
 }

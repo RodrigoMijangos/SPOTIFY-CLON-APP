@@ -23,7 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return;
       }
 
-      console.log('🍪 authInterceptor: Guardando token en cookies');
+      console.log('authInterceptor: Guardando token en cookies');
 
       const expireTimeMS = 60 * 60 * 1000;
       const expireDate = new Date(Date.now() + expireTimeMS);
@@ -34,7 +34,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         cookieService.setCookie('spotify_refresh_token', body.refresh_token, expireDate);
       }
 
-      console.log('✅ Token guardado. Expira en:', expireDate);
+      console.log('Token guardado. Expira en:', expireDate);
     })
   );
 };

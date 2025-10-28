@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { SongInfo } from './song-info/song-info';
 import { AudioController } from './audio-controller/audio-controller';
-import { Playlist } from './playlist/playlist';
 import { Player } from './player/player';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
@@ -19,7 +18,6 @@ import { Album } from './album/album';
     App,
     SongInfo,
     AudioController,
-    Playlist,
     Player,
     Navbar,
     Album

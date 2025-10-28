@@ -4,28 +4,6 @@ import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Track } from '../../interfaces/track';
 
-interface SpotifySearchResponse {
-  tracks: {
-    items: Array<{
-      id: string;
-      name: string;
-      duration_ms: number;
-      href: string;
-      artists: Array<{
-        id: string;
-        name: string;
-        href: string;
-      }>;
-      album: {
-        images: Array<{
-          url: string;
-          width: number;
-          height: number;
-        }>;
-      };
-    }>;
-  };
-}
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +18,7 @@ export class SpotifySearchService {
       .set('type', 'track')
       .set('limit', limit.toString());
 
-    return this._http.get<SpotifySearchResponse>(
+    return this._http.get<Track>(
       `${environment.API_URL}/search`,
       { params }
     ).pipe(
@@ -72,7 +50,7 @@ export class SpotifySearchService {
       .set('limit', '50')
       .set('offset', randomOffset.toString());
 
-    return this._http.get<SpotifySearchResponse>(
+    return this._http.get<Track>(
       `${environment.API_URL}/search`,
       { params }
     ).pipe(
