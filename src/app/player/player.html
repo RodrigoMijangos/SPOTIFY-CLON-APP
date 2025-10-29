@@ -1,15 +1,23 @@
 <div class="player-container">
+  
   <app-search-bar></app-search-bar>
 
-  <div class="song-info-container" *ngIf="featuredAlbum">
-    <app-song-info
-      [song]="playlist[0]"
-      [cover]="featuredAlbum.images[0]"
-      [displayMode]="'compact'">
-    </app-song-info>
+  <div class="main-content">
+    
+    <div class="albums-section">
+      <h2>ALBUMS RECOMMENDATION</h2>
+      <app-album></app-album>
+    </div>
+
+    <div class="song-info-section">
+      <app-song-info
+        [song]="playlist[0]"
+        [cover]="featuredAlbum?.images[0]"
+        [displayMode]="'full'">
+      </app-song-info>
+    </div>
+
   </div>
 
-  <div class="audio-controller-container" *ngIf="playlist.length > 0">
-    <app-audio-controller [playlist]="playlist"></app-audio-controller>
-  </div>
+  <app-audio-controller [playlist]="playlist"></app-audio-controller>
 </div>

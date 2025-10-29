@@ -8,11 +8,10 @@ import { Track } from '../interfaces/track';
 
 @Component({
   selector: 'app-player',
-  templateUrl: './player.html',
+  templateUrl: './player',
   styleUrls: ['./player.css']
 })
 export class Player implements OnInit {
-  
   featuredAlbum?: Album;
   playlist: Track[] = [];
 
@@ -46,7 +45,6 @@ export class Player implements OnInit {
   }
 
   loadFeaturedAlbum(): void {
-    // Usa TU servicio de Spotify
     this.albumService.getAlbum('1ATL5GLyefJaxhQzSPVrLX').subscribe({
       next: (album) => {
         console.log('✅ Álbum destacado:', album);

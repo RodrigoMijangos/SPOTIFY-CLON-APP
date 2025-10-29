@@ -1,6 +1,6 @@
 import { Component, ViewChild, signal, Input, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import { Track } from '../../../interfaces/track';
-import { PlayerService } from '../../../services/general/player-service';
+import { Track } from '../interfaces/track';
+import { PlayerService } from '../services/general/player-service';
 import { Subscription } from 'rxjs';
 
 @Component({

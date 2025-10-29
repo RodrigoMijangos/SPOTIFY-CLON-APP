@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Player } from './player';
-import { SearchBar } from './components/search-bar/search-bar';
-import { AudioController } from './components/audio-controller/audio-controller';
-import { Album } from './components/album/album';
+import { SearchBar } from '../search-bar/search-bar';
+import { AudioController } from '../audio-controller/audio-controller';
+import { Album } from '../album/album';
 import { SongInfo } from './components/song-info/song-info';
-import { SearchResults } from './components/search-results/search-results';
+import { SearchResults } from '../../search-results/search-results';
 import { RouterModule } from '@angular/router';
 
 
