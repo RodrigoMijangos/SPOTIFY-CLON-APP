@@ -1,20 +1,29 @@
-import { Injectable, inject } from '@angular/core'; 
-import { HttpClient, HttpHeaders } from '@angular/common/http'; 
+import { Injectable } from '@angular/core'; 
+import { HttpClient, HttpParams } from '@angular/common/http'; 
 import { Observable } from 'rxjs'; 
 import { environment } from 'src/environments/environment'; 
+
 @Injectable({ providedIn: 'root' }) 
 export class SpotifyLoginService { 
-  private http = inject(HttpClient); 
-  constructor() { } 
+
+  constructor(private _http: HttpClient) {
+   } 
+
+
   getAccessToken(): Observable<any> { 
-    const body = `grant_type=client_credentials&client_id=${environment.CLIENT_ID}&client_secret=${environment.CLIENT_SECRET}`; 
-    console.log('Body generado:', body); 
-    const headers = new HttpHeaders({ 
-      'Content-Type': 'application/x-www-form-urlencoded' 
-    }); 
-    return this.http.post<any>(
-      environment.AUTH_API_URL, 
-      body, 
-      { headers }); 
-    } 
+     const body = new HttpParams()
+      .set('grant_type','client_credentials')
+      .set('client_id',environment.CLIENT_ID)
+      .set('client_secret',environment.CLIENT_SECRET);
+
+    return this._http.post<any>(
+      environment.AUTH_API_URL,
+      body.toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
+  }
 }

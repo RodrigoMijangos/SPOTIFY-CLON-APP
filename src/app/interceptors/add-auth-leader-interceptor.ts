@@ -1,12 +1,13 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { CookiesStorageService } from '../services/cookie-storage-service';
+import { environment } from 'src/environments/environment';
 
 export const addAuthLeaderInterceptor: HttpInterceptorFn = (req, next) => {
+  
   const cookieService = inject(CookiesStorageService);
   
-  if (req.url.includes('accounts.spotify.com/api/token')) {
-    console.log('⏭️ Saltando interceptor para:', req.url);
+  if (req.url.includes(environment.AUTH_API_URL)) {
     return next(req);
   }
 

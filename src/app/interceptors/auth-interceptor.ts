@@ -2,14 +2,13 @@ import { HttpInterceptorFn, HttpEventType } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { tap } from 'rxjs';
 import { CookiesStorageService } from '../services/cookie-storage-service';
+import { environment } from 'src/environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const cookieService = inject(CookiesStorageService);
-  const TOKEN_URL = 'accounts.spotify.com/api/token';
-
   return next(req).pipe(
     tap(event => {
-      if (!req.url.includes(TOKEN_URL)) {
+      if (!req.url.includes(environment.AUTH_API_URL)) {
         return;
       }
 

@@ -1,11 +1,10 @@
 export interface Track {
-  id: string;
-  name: string;
-  duration_ms: number;
-  href: string;
-  preview_url?: string;
-  artists: Array<{
-    id: string;
-    name: string;
-  }>;
+    id: string,
+    name: string,
+    duration_ms: number,
+    href: string,
+    artists: {
+        id: string,
+        name: string
+    }[]
 }
