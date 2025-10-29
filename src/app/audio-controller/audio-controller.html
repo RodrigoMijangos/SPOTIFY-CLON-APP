@@ -1,13 +1,25 @@
-<audio controls hidden></audio>
-<input type="range" id="control-bar">
+<input 
+  type="range" 
+  id="control-bar"
+  [value]="currentTime()"
+  [max]="duration()"
+  (input)="onSeek($event)"
+  [disabled]="duration() === 0">
+
 <div class="player-buttons">
-    <span class="back">
+    <span class="back" (click)="onPrevious()">
         <i class="fa-solid fa-backward-step"></i>
     </span>
-    <span class="play">
+    
+    <span class="play" (click)="onTogglePlayPause()">
+      @if (isPlaying()) {
+        <i class="fa-solid fa-pause"></i>
+      } @else {
         <i class="fa-solid fa-play"></i>
+      }
     </span>
-    <span class="next">
+    
+    <span class="next" (click)="onNext()">
         <i class="fa-solid fa-forward-step"></i>
     </span>
 </div>

@@ -10,4 +10,5 @@ export interface SpotifyTrackResponse {
             href:string
         }
     ]
+    preview_url: string;
 }
