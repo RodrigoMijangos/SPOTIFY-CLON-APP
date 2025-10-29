@@ -84,6 +84,8 @@
   font-size: 2.5em;
   color: var(--spotify-text-primary);
   margin-bottom: 10px;
+  word-wrap: break-word; 
+  white-space: normal; 
 }
 
 :host(.main) .card-song-details .card-song-artist {
