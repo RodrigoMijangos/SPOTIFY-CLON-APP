@@ -1,0 +1,15 @@
+<div class="song-info" [ngClass]="display_mode()">
+  <img
+    *ngIf="cover()"
+    [src]="cover()?.url"
+    [alt]="song()?.name"
+    class="cover"
+  />
+
+  <div class="details">
+    <h3 class="song-name">{{ song()?.name }}</h3>
+    <p class="artist-name">
+      {{ song()?.artists.map(a => a.name).join(', ') }}
+    </p>
+  </div>
+</div>

@@ -1,22 +1,15 @@
 <div class="player-container">
-  
-  <app-navbar></app-navbar>
+  <app-search-bar></app-search-bar>
 
-  <div class="main-content">
-    
-    <!-- LADO IZQUIERDO: router-outlet (AlbumComponent o SearchComponent) -->
-    <div class="left-section">
-      <router-outlet></router-outlet>
-    </div>
-
-    <div class="right-section">
-      <app-song-info [album]="featuredAlbum"></app-song-info>
-    </div>
-    
+  <div class="song-info-container" *ngIf="featuredAlbum">
+    <app-song-info
+      [song]="playlist[0]"
+      [cover]="featuredAlbum.images[0]"
+      [displayMode]="'compact'">
+    </app-song-info>
   </div>
 
-  <div class="audio-section">
+  <div class="audio-controller-container" *ngIf="playlist.length > 0">
     <app-audio-controller [playlist]="playlist"></app-audio-controller>
   </div>
-  
 </div>
