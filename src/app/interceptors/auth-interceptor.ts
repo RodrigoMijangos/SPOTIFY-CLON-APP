@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { tap } from 'rxjs';
 import { CookiesStorageService } from '../services/general/cookies-storage-service';
 import { isTokenResponse } from '../core/guards/spotify-api/is-token-response';
-import { environment } from '../../environments/environment.development';
+import { enviroments } from '../../environments/environment.development';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
 
@@ -11,7 +11,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 
   return next(req).pipe(
     tap(event => {
-      if(!req.url.includes(environment.AUTH_API_URL))
+      if(!req.url.includes(enviroments.AUTH_API_URL))
         return;
       if(event instanceof HttpResponse && event.status === 200){
         const body = event.body as any;
