@@ -1,13 +1,13 @@
 import { HttpInterceptorFn} from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
 import { inject } from '@angular/core';
 import { CookiesStorageService } from '../../services/general/cookies-storage-service';
+import { enviroments } from '../../../environments/environment.development';
 
 export const addAuthHeaderInterceptor: HttpInterceptorFn = (req, next) => {
 
   const _cookieStorage: CookiesStorageService = inject(CookiesStorageService)
 
-  if(!req.url.includes(environment.API_URL))
+  if(!req.url.includes(enviroments.API_URL))
     return next(req)
 
   const newReq = req.clone({
