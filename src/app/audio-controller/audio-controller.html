@@ -1,13 +1,13 @@
-<audio controls hidden></audio>
-<input type="range" id="control-bar">
+<audio #audio controls hidden></audio>
+<input type="range" id="control-bar" #controlBar min="0" max="100" value="0">
 <div class="player-buttons">
-    <span class="back">
+    <span class="back" (click)="prev()">
         <i class="fa-solid fa-backward-step"></i>
     </span>
-    <span class="play">
+    <span class="play" (click)="togglePlay()">
         <i class="fa-solid fa-play"></i>
     </span>
-    <span class="next">
+    <span class="next" (click)="next()">
         <i class="fa-solid fa-forward-step"></i>
     </span>
 </div>
