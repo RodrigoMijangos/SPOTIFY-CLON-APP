@@ -1,10 +1,65 @@
-<h1>
-    Queue
-</h1>
-<div class="content">
-    @for(song of playlist(); track song.id){
-        <app-song-info [song]="song" [cover]="cover()" displayMode="card"></app-song-info>
-    } @empty {
-        
-    }
+<div class="playlist-container">
+    <div class="playlist-header">
+        <h2>Cola de reproducción</h2>
+        <div class="playlist-info">
+            {{ playlist()?.length || 0 }} canciones
+        </div>
+    </div>
+
+    <div class="playlist-content">
+        <div class="tracks-header">
+            <div class="track-number">#</div>
+            <div class="track-title">TÍTULO</div>
+            <div class="track-album">ÁLBUM</div>
+            <div class="track-duration">
+                <i class="fa-regular fa-clock"></i>
+            </div>
+        </div>
+
+        <div class="tracks-list">
+            @for(track of playlist(); track track.id; let i = $index){
+                <div 
+                    class="track-item" 
+                    [class.active]="isCurrentTrack(track)"
+                    (click)="playTrack(track)"
+                    (dblclick)="playTrack(track)"
+                >
+                    <div class="track-number">
+                        <span class="number">{{ i + 1 }}</span>
+                        <i class="fa-solid fa-play play-icon"></i>
+                    </div>
+                    
+                    <div class="track-title">
+                        <div class="track-info">
+                            <span class="title">{{ track.name }}</span>
+                            <span class="artist">{{ track.artists?.[0]?.name || 'Artista desconocido' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="track-album">
+                        {{ track.album?.name || 'Álbum desconocido' }}
+                    </div>
+                    
+                    <div class="track-duration">
+                        {{ formatDuration(track.duration_ms) }}
+                    </div>
+                    
+                    <div class="track-actions">
+                        <button class="action-btn" title="Me gusta">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <button class="action-btn" title="Más opciones">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                    </div>
+                </div>
+            } @empty {
+                <div class="empty-playlist">
+                    <i class="fa-solid fa-music"></i>
+                    <h3>No hay canciones en la cola</h3>
+                    <p>Las canciones que añadas aparecerán aquí.</p>
+                </div>
+            }
+        </div>
+    </div>
 </div>

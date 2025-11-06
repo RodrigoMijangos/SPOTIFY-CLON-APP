@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Player } from './player/player';
+import { SearchComponent } from './search/search';
 import { StaticContainer } from './secondary/static-container/static-container';
 import { HomeChild } from './secondary/home-child/home-child';
 import { FirstChild } from './secondary/first-child/first-child';
