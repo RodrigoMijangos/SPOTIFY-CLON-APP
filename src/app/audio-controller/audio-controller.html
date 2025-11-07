@@ -1,77 +1,58 @@
-<div class="audio-controller">
-  <audio #audio controls="false" style="display: none;"></audio>
-  
-  <!-- Información de la canción actual -->
-  <div class="track-info">
-    @if (currentTrack) {
-      <div class="track-details">
-        <h4 class="track-name">{{ currentTrack.name }}</h4>
-        <p class="artist-name">{{ currentTrack.artists?.[0]?.name || 'Unknown Artist' }}</p>
-      </div>
-    }
+<div class="audio-controller" *ngIf="currentTrack">
+  <div class="current-track-info">
+    <div class="album-cover">
+      <img [src]="getAlbumImage()" [alt]="currentTrack.name" />
+    </div>
+    <div class="track-details">
+      <div class="track-name">{{ currentTrack.name }}</div>
+      <div class="artist-name">{{ getArtistNames() }}</div>
+    </div>
   </div>
 
-  <!-- Controles principales -->
   <div class="player-controls">
     <div class="control-buttons">
-      <button class="control-btn shuffle" title="Aleatorio">
-        <i class="fa-solid fa-shuffle"></i>
-      </button>
-      
-      <button class="control-btn prev" (click)="prev()" title="Anterior">
+      <button class="control-btn" (click)="previousTrack()" title="Anterior">
         <i class="fa-solid fa-backward-step"></i>
       </button>
       
-      <button class="control-btn play-pause" (click)="togglePlay()" title="{{ isPlaying ? 'Pausar' : 'Reproducir' }}">
-        <i class="fa-solid" [class]="isPlaying ? 'fa-pause' : 'fa-play'"></i>
+      <button class="control-btn play-pause-btn" (click)="togglePlayPause()" title="{{ isPlaying ? 'Pausar' : 'Reproducir' }}">
+        <i class="fa-solid" [ngClass]="{ 'fa-play': !isPlaying, 'fa-pause': isPlaying }"></i>
       </button>
       
-      <button class="control-btn next" (click)="next()" title="Siguiente">
+      <button class="control-btn" (click)="nextTrack()" title="Siguiente">
         <i class="fa-solid fa-forward-step"></i>
       </button>
-      
-      <button class="control-btn repeat" title="Repetir">
-        <i class="fa-solid fa-repeat"></i>
-      </button>
     </div>
 
-    <!-- Barra de progreso -->
     <div class="progress-section">
-      <span class="time current-time">{{ formatTime(currentTime) }}</span>
-      <input 
-        type="range" 
-        #controlBar 
-        class="progress-bar" 
-        min="0" 
-        max="{{ duration }}" 
-        [value]="currentTime"
-        (input)="onSeek($event)"
-      >
-      <span class="time duration">{{ formatTime(duration) }}</span>
+      <span class="time-display">{{ formatTime(currentTime) }}</span>
+      <div class="progress-container">
+        <input 
+          type="range" 
+          class="progress-bar"
+          [value]="currentTime" 
+          [max]="duration" 
+          step="0.1"
+          (input)="onSeek($event)"
+          [style.background]="'linear-gradient(to right, #1db954 0%, #1db954 ' + getProgress() + '%, #404040 ' + getProgress() + '%, #404040 100%)'"
+        />
+      </div>
+      <span class="time-display">{{ formatTime(duration) }}</span>
     </div>
   </div>
 
-  <!-- Controles de volumen y opciones -->
-  <div class="volume-controls">
-    <button class="control-btn volume-btn" title="Volumen">
-      <i class="fa-solid fa-volume-high"></i>
-    </button>
+  <div class="volume-control">
+    <i class="fa-solid fa-volume-up"></i>
     <input 
       type="range" 
-      class="volume-slider" 
-      min="0" 
+      class="volume-bar"
+      [value]="volume" 
       max="1" 
-      step="0.1"
-      [value]="volume"
+      step="0.01"
       (input)="onVolumeChange($event)"
-    >
-    
-    <button class="control-btn queue-btn" title="Cola de reproducción">
-      <i class="fa-solid fa-list"></i>
-    </button>
-    
-    <button class="control-btn fullscreen-btn" title="Pantalla completa">
-      <i class="fa-solid fa-expand"></i>
-    </button>
+    />
   </div>
 </div>
+
+<!-- Reproductor de audio oculto -->
+<audio controls hidden></audio>

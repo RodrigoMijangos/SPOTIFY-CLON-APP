@@ -29,7 +29,6 @@ export class SpotifyAlbumService {
               name: track.name,
               duration_ms: track.duration_ms,
               href: track.href,
-              preview_url: (track as any).preview_url ?? null,
               artists: track.artists.map(artist => ({
                 id: artist.id,
                 name: artist.name

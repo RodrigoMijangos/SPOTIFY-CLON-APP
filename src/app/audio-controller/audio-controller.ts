@@ -73,7 +73,7 @@ export class AudioController implements OnInit, OnDestroy {
   onVolumeChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     const newVolume = parseFloat(target.value);
-    this.audioPlayerService.setVolumen(newVolume);
+    this.audioPlayerService.setVolume(newVolume);
   }
 
   // Formatear tiempo
