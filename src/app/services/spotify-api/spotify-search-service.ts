@@ -51,7 +51,7 @@ export class SpotifySearchService {
       .set('limit', limit.toString())
       .set('market', 'US');
 
-    return this._http.get<SpotifySearchResponse>(`${environment.SPOTIFY_API_URL}/search`, { params })
+    return this._http.get<SpotifySearchResponse>(`${environment.API_URL}/search`, { params })
       .pipe(
         map(response => ({
           tracks: response.tracks?.items || [],
