@@ -19,15 +19,14 @@ export class Views implements OnInit{
   currentCover = signal<Image | undefined>(undefined);
   playlist = signal<Track[]>([]);
 
-  constructor(private playerState: PlayerStateService) {}
+  constructor(private playerState: PlayerStateService) {
+
+  }
 
   ngOnInit(): void {
-    // Views es responsable de cargar los álbumes aleatorios al iniciar la vista
-    this.playerState.loadRandomAlbums(12);
+    this.playerState.loadRandomAlbums(12); //servicio es el que carga los albumes
 
-    // Suscribimos las señales locales a los observables del servicio.
-    // Usamos suscripciones simples porque `toSignal` no está disponible
-    // en la versión objetivo de este proyecto.
+    // suscribimos las señales locales a los observables del servicio son los que vienen de allá
     this.playerState.randomAlbums$.subscribe(a => this.randomAlbums.set(a));
     this.playerState.currentAlbum$.subscribe(a => this.currentAlbum.set(a));
     this.playerState.currentSong$.subscribe(s => this.currentSong.set(s));
@@ -35,9 +34,6 @@ export class Views implements OnInit{
     this.playerState.playlist$.subscribe(p => this.playlist.set(p));
   }
 
-  // Método que será llamado por el componente hijo (Player) cuando se
-  // seleccione un álbum. Delegamos en el servicio para mantener la
-  // lógica de estado centralizada.
   onAlbumSelected(selected: Album) {
     this.playerState.selectAlbum(selected);
   }

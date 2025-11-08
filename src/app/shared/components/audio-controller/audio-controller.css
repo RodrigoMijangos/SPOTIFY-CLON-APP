@@ -6,6 +6,23 @@
     padding: 20px 0;
     align-items: center;
     justify-content: center;
+    width: 100%;
+}
+
+.progress-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 600px;
+    padding: 0 20px;
+}
+
+.time {
+    color: #b3b3b3;
+    font-size: 12px;
+    min-width: 40px;
+    text-align: center;
 }
 
 .player-buttons {

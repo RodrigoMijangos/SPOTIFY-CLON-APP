@@ -7,8 +7,10 @@ import { SpotifyAlbumService } from './spotify-album-service';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerStateService {
+
+  //mantener cambios actuales y notificar cambios a view. Behaviour es para mantener estados.
   private randomAlbumsSub = new BehaviorSubject<Album[]>([]);
-  randomAlbums$: Observable<Album[]> = this.randomAlbumsSub.asObservable();
+  randomAlbums$: Observable<Album[]> = this.randomAlbumsSub.asObservable(); //los componentes se actualizan automáticamente
 
   private currentAlbumSub = new BehaviorSubject<Album | undefined>(undefined);
   currentAlbum$ = this.currentAlbumSub.asObservable();
@@ -22,28 +24,28 @@ export class PlayerStateService {
   private playlistSub = new BehaviorSubject<Track[]>([]);
   playlist$ = this.playlistSub.asObservable();
 
-  constructor(private spotify: SpotifyAlbumService) {}
+  constructor(private spotify: SpotifyAlbumService) { }
 
   loadRandomAlbums(count = 12) {
     this.spotify.getRandomAlbums(count).subscribe({
       next: (albums) => this.randomAlbumsSub.next(albums),
-      error: (err) => console.error('Error loading random albums', err)
+      error: (err) => console.error('No se pudo cargar los albumes', err)
     });
   }
 
   selectAlbum(album: Album) {
-    // If album already has tracks, use it. Otherwise fetch album with tracks.
+    //si hay canciones ponlas
     if (album.tracks && album.tracks.length > 0) {
       this.setCurrentAlbum(album);
     } else {
       this.spotify.getAlbum(album.id).subscribe({
         next: (full) => this.setCurrentAlbum(full),
-        error: (err) => console.error('Error loading album tracks', err)
+        error: (err) => console.error('Error cargando el track', err)
       });
     }
   }
 
-  private setCurrentAlbum(album: Album) {
+  private setCurrentAlbum(album: Album) { 
     this.currentAlbumSub.next(album);
     if (album.tracks && album.tracks.length > 0) {
       this.currentSongSub.next(album.tracks[0]);

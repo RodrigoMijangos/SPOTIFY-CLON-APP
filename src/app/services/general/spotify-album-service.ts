@@ -30,7 +30,7 @@ export class SpotifyAlbumService {
             name: track.name,
             duration_ms: track.duration_ms,
             href: track.href,
-            preview_url: track.preview_url, // ← AGREGAR ESTO
+            preview_url: track.preview_url,
             artists: track.artists.map(artist => ({
               id: artist.id,
               name: artist.name

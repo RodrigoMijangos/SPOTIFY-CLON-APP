@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, signal, Input } from '@angular/core';
-import { Song } from '../../../interfaces/song';
+import { Track } from '../../../interfaces/track';
+import { PlayerStateService } from '../../../services/general/player-state.service';
 
 @Component({
   selector: 'app-audio-controller',
@@ -9,8 +10,8 @@ import { Song } from '../../../interfaces/song';
 })
 export class AudioController {
   @ViewChild('audio') audioElement!: ElementRef<HTMLAudioElement>;
-  @Input() currentSong!: Song;
-  @Input() playlist: Song[] = [];
+  @Input() currentSong?: Track;
+  @Input() playlist: Track[] = [];
 
   isPlaying = signal(false);
   currentTime = signal(0);
@@ -21,20 +22,32 @@ export class AudioController {
   ngAfterViewInit() {
     const audio = this.audioElement.nativeElement;
     
-    if (this.currentSong?.url) {
-      this.currentSong.url;
+    if (this.currentSong?.preview_url) {
+      this.loadSong(this.currentSong);
     }
     
+    // Actualiza el tiempo actual y el progreso mientras se reproduce
     audio.addEventListener('timeupdate', () => {
       this.currentTime.set(audio.currentTime);
       this.progress.set((audio.currentTime / audio.duration) * 100 || 0);
     });
 
+    // Cuando se carga la metadata del audio (incluyendo duración)
     audio.addEventListener('loadedmetadata', () => {
+      // Para previews de Spotify, la duración es típicamente 30 segundos
       this.duration.set(audio.duration);
+      // También actualizamos el valor máximo de la barra de progreso
+      const progressBar = document.getElementById('control-bar') as HTMLInputElement;
+      if (progressBar) {
+        progressBar.max = audio.duration.toString();
+      }
     });
 
+    // Cuando termina la canción
     audio.addEventListener('ended', () => {
+      this.isPlaying.set(false);
+      this.currentTime.set(0);
+      this.progress.set(0);
       this.playNext();
     });
   }
@@ -69,10 +82,15 @@ export class AudioController {
     this.loadSong(this.playlist[this.currentIndex]);
   }
 
-  loadSong(song: Song) {
+  loadSong(song: Track) {
+    if (!song?.preview_url) {
+      console.error('Esta canción no tiene vista previa disponible');
+      return;
+    }
+
     const audio = this.audioElement.nativeElement;
     this.currentSong = song;
-    audio.src = song.url;
+    audio.src = song.preview_url;
     
     if (this.isPlaying()) {
       audio.play();
@@ -87,9 +105,15 @@ export class AudioController {
   }
 
   formatTime(seconds: number): string {
-    if (isNaN(seconds)) return '0:00';
+    if (isNaN(seconds) || seconds === 0) return '0:00';
+    
+    // Convertir a minutos y segundos
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    
+    // Asegurar que los segundos siempre tengan dos dígitos
+    const formattedSecs = secs.toString().padStart(2, '0');
+    
+    return `${mins}:${formattedSecs}`;
   }
 }

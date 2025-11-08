@@ -16,9 +16,15 @@
     </div>
 
     <div class="progress-section">
-        <span class="time">{{ formatTime(currentTime())}}</span>
-        <input type="range" id="control-bar" min="0" class="progress-bar" max="100" [value]="progress()"
+        <span class="time current-time">{{ formatTime(currentTime())}}</span>
+        <input 
+            type="range" 
+            id="control-bar" 
+            class="progress-bar" 
+            min="0" 
+            [max]="duration()" 
+            [value]="currentTime()"
             (input)="seekTo($event)">
-        <span class="time">{{ formatTime(duration())}}</span>
+        <span class="time total-time">{{ formatTime(duration())}}</span>
     </div>
 </div>

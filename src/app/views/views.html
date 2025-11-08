@@ -12,9 +12,7 @@
         <aside class="aside">
             @if (currentSong()) {
             <app-song-info [song]="currentSong()" [cover]="currentCover()" displayMode="main"></app-song-info>
-            } @else {
-            <div class="no-song">Selecciona un álbum para reproducir la primera canción</div>
-            }
+            } 
             <app-playlist></app-playlist>
         </aside>
     </section>
