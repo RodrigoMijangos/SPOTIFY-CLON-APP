@@ -7,10 +7,6 @@ const routes: Routes = [
   {
     path:'',
     component: Player,
-    children: [
-      { path: '', redirectTo: 'albums', pathMatch: 'full' },
-      { path: 'albums', loadChildren: () => import('./player/player').then(m => m.Player) }
-    ]
   },
   {
     path: '**',

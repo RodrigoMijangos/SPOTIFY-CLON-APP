@@ -1,7 +1,5 @@
-import { Component, ViewChild, signal, Input, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import { Track } from '../interfaces/track';
-import { PlayerService } from '../services/general/player-service';
-import { Subscription } from 'rxjs';
+import { Component, ElementRef, ViewChild, signal, Input } from '@angular/core';
+import { Song } from '../interfaces/song';
 
 @Component({
   selector: 'app-audio-controller',
@@ -9,49 +7,27 @@ import { Subscription } from 'rxjs';
   templateUrl: './audio-controller.html',
   styleUrl: './audio-controller.css'
 })
-export class AudioController implements OnInit, OnDestroy {
+export class AudioController {
   @ViewChild('audio') audioElement!: ElementRef<HTMLAudioElement>;
-  @Input() playlist: Track[] = [];
+  @Input() currentSong!: Song;
+  @Input() playlist: Song[] = [];
 
-  // Estados locales con signals
   isPlaying = signal(false);
   currentTime = signal(0);
   duration = signal(0);
   progress = signal(0);
   currentIndex = 0;
 
-  // Track actual viene del PlayerService
-  currentTrack?: Track;
-  
-  // Subscripciones
-  private subscriptions: Subscription[] = [];
-
-  constructor(private playerService: PlayerService) {}
-
-  ngOnInit(): void {
-    // Suscribirse al track actual del servicio
-    const trackSub = this.playerService.currentTrack$.subscribe(track => {
-      if (track && track.id !== this.currentTrack?.id) {
-        this.currentTrack = track;
-        this.loadTrack(track);
-      }
-    });
-
-    // Suscribirse al estado de reproducción
-    const playingSub = this.playerService.isPlaying$.subscribe(playing => {
-      this.isPlaying.set(playing);
-    });
-
-    this.subscriptions.push(trackSub, playingSub);
-  }
-
   ngAfterViewInit() {
     const audio = this.audioElement.nativeElement;
+    
+    if (this.currentSong?.url) {
+      audio.src = this.currentSong.url;
+    }
     
     audio.addEventListener('timeupdate', () => {
       this.currentTime.set(audio.currentTime);
       this.progress.set((audio.currentTime / audio.duration) * 100 || 0);
-      this.playerService.setCurrentTime(audio.currentTime);
     });
 
     audio.addEventListener('loadedmetadata', () => {
@@ -61,16 +37,6 @@ export class AudioController implements OnInit, OnDestroy {
     audio.addEventListener('ended', () => {
       this.playNext();
     });
-
-    // Si ya hay un track al iniciar, cargarlo
-    if (this.currentTrack) {
-      this.loadTrack(this.currentTrack);
-    }
-  }
-
-  ngOnDestroy(): void {
-    // Limpiar subscripciones
-    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   togglePlay() {
@@ -78,65 +44,38 @@ export class AudioController implements OnInit, OnDestroy {
     
     if (this.isPlaying()) {
       audio.pause();
-      this.playerService.setIsPlaying(false);
+      this.isPlaying.set(false);
     } else {
-      audio.play().catch(error => {
-        console.error('Error al reproducir:', error);
-      });
-      this.playerService.setIsPlaying(true);
+      audio.play();
+      this.isPlaying.set(true);
     }
   }
 
   playPrevious() {
-    if (this.playlist.length === 0) return;
-
     if (this.currentIndex > 0) {
       this.currentIndex--;
     } else {
       this.currentIndex = this.playlist.length - 1;
     }
-    
-    const track = this.playlist[this.currentIndex];
-    this.playerService.setCurrentTrack(track);
+    this.loadSong(this.playlist[this.currentIndex]);
   }
 
   playNext() {
-    if (this.playlist.length === 0) return;
-
     if (this.currentIndex < this.playlist.length - 1) {
       this.currentIndex++;
     } else {
       this.currentIndex = 0;
     }
-    
-    const track = this.playlist[this.currentIndex];
-    this.playerService.setCurrentTrack(track);
+    this.loadSong(this.playlist[this.currentIndex]);
   }
 
-  loadTrack(track: Track) {
+  loadSong(song: Song) {
     const audio = this.audioElement.nativeElement;
-    this.currentTrack = track;
+    this.currentSong = song;
+    audio.src = song.url;
     
-    // Spotify solo provee preview_url (30 segundos)
-    const audioUrl = (track as any).preview_url || track.href;
-    
-    if (audioUrl) {
-      audio.src = audioUrl;
-      
-      if (this.isPlaying()) {
-        audio.play().catch(error => {
-          console.error('Error al reproducir:', error);
-          this.playerService.setIsPlaying(false);
-        });
-      }
-    } else {
-      console.warn('⚠️ No hay URL de audio disponible para:', track.name);
-    }
-
-    // Actualizar índice actual en la playlist
-    const index = this.playlist.findIndex(t => t.id === track.id);
-    if (index !== -1) {
-      this.currentIndex = index;
+    if (this.isPlaying()) {
+      audio.play();
     }
   }
 

@@ -1,61 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { SpotifyLoginService } from '../services/general/spotify-login-service';
 import { SpotifyAlbumService } from '../services/general/spotify-album-service';
-import { PlayerService } from '../services/general/player-service';
-import { CookiesStorageService } from '../services/cookie-storage-service';
+import { Observable } from 'rxjs';
 import { Album } from '../interfaces/album';
-import { Track } from '../interfaces/track';
 
 @Component({
   selector: 'app-player',
-  templateUrl: './player',
-  styleUrls: ['./player.css']
+  templateUrl: './player.html',
+  standalone: false,
+  styleUrl: './player.css'
 })
 export class Player implements OnInit {
-  featuredAlbum?: Album;
-  playlist: Track[] = [];
 
-  constructor(
-    private loginService: SpotifyLoginService,
-    private albumService: SpotifyAlbumService,
-    private playerService: PlayerService,
-    private cookieService: CookiesStorageService
-  ) {}
+
+  album: Album | undefined;
+  randomAlbums: Album[] = [];
+
+  constructor(private _spotifyAlbum: SpotifyAlbumService) {
+  }
 
   ngOnInit(): void {
-    const token = this.cookieService.getCookie('spotify_access_token');
-    
-    if (token) {
-      console.log('✅ Token desde cookies');
-      this.loadFeaturedAlbum();
-    } else {
-      console.log('❌ Sin token, obteniendo...');
-      this.getToken();
-    }
+    this.loadRandomAlbums();  // 12 álbumes random
   }
 
-  getToken(): void {
-    this.loginService.getAccessToken().subscribe({
-      next: (response) => {
-        console.log('✅ Token obtenido:', response.access_token);
-        setTimeout(() => this.loadFeaturedAlbum(), 100);
-      },
-      error: (error) => console.error('❌ Error token:', error)
-    });
-  }
 
-  loadFeaturedAlbum(): void {
-    this.albumService.getAlbum('1ATL5GLyefJaxhQzSPVrLX').subscribe({
-      next: (album) => {
-        console.log('✅ Álbum destacado:', album);
-        this.featuredAlbum = album;
-        
-        if (album.tracks && album.tracks.length > 0) {
-          this.playlist = album.tracks;
-          this.playerService.setCurrentTrack(album.tracks[0]);
-        }
+  loadRandomAlbums(): void {
+    this._spotifyAlbum.getRandomAlbums(12).subscribe({
+      next: (albums) => {
+        this.randomAlbums = albums;
+        console.log('✅ 12 álbumes aleatorios cargados:', albums);
       },
-      error: (error) => console.error('❌ Error álbum:', error)
+      error: (err) => console.error('❌ Error álbumes:', err)
     });
   }
 }

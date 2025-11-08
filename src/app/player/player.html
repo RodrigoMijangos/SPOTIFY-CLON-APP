@@ -1,23 +1,38 @@
-<div class="player-container">
+<main class="player-wrapper">
   
-  <app-search-bar></app-search-bar>
+  <nav class="search-bar">
+    <app-search-bar></app-search-bar>
+  </nav>
 
-  <div class="main-content">
+  <section class="player">
     
-    <div class="albums-section">
-      <h2>ALBUMS RECOMMENDATION</h2>
-      <app-album></app-album>
+    <div class="main-view">
+      <section class="recommended-section">
+        <h2>ALBUMS RECOMMENDATION</h2>
+        <article class="albums-grid">
+          @for (albumItem of randomAlbums.slice(0, 12); track albumItem.id) {
+            <app-album [album]="albumItem"></app-album>
+          } @empty {
+            <p>No hay álbumes disponibles</p>
+          }
+        </article>
+      </section>
     </div>
 
-    <div class="song-info-section">
-      <app-song-info
-        [song]="playlist[0]"
-        [cover]="featuredAlbum?.images[0]"
-        [displayMode]="'full'">
+    <aside class="aside">
+      
+      <app-song-info 
+        [song]="album?.tracks?.at(-1)" 
+        [cover]="album?.images?.at(0)" 
+        displayMode="main">
       </app-song-info>
-    </div>
 
-  </div>
+      <app-playlist>
+      </app-playlist>
+    </aside>
 
-  <app-audio-controller [playlist]="playlist"></app-audio-controller>
-</div>
+  </section>
+
+  <app-audio-controller></app-audio-controller>
+  
+</main>

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Song } from '../interfaces/song';
+import { Album as AlbumInterface } from '../interfaces/album';
 
 @Component({
   selector: 'app-album',
@@ -8,5 +8,5 @@ import { Song } from '../interfaces/song';
   styleUrl: './album.css'
 })
 export class Album {
-  album = input.required<Song[]>();
+  album = input.required<AlbumInterface>();
 }

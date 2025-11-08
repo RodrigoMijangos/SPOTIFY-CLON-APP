@@ -6,11 +6,9 @@ import { Image } from '../interfaces/image';
   selector: 'app-song-info',
   standalone: false,
   templateUrl: './song-info.html',
-  styleUrl: './song-info.css',
-  host:{
-    // '[class]': 'displayMode()',
-  }
+  styleUrl: './song-info.css'
 })
+
 export class SongInfo {
   display_mode = input.required<string>({ alias: 'displayMode'});
   song = input.required<Track | undefined>();

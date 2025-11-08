@@ -57,4 +57,31 @@ export class SpotifyAlbumService {
       })
     )
   }
+
+  getRandomAlbums(count: number = 12): Observable<Album[]> {
+    // Lista de géneros populares para búsqueda aleatoria
+    const genres = ['pop', 'rock', 'jazz', 'electronic', 'hip-hop', 'indie', 'latin', 'r&b'];
+    const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+    const randomOffset = Math.floor(Math.random() * 100);
+
+    return this._http.get<any>(
+      `${environment.API_URL}/search?q=genre:${randomGenre}&type=album&limit=${count}&offset=${randomOffset}`
+    ).pipe(
+      map(response => {
+        return response.albums.items.map((album: any) => ({
+          id: album.id,
+          name: album.name,
+          total_tracks: album.total_tracks,
+          images: album.images.map((img: any) => ({
+            width: img.width,
+            height: img.height,
+            url: img.url
+          })),
+          href: album.href,
+          artists: album.artists,
+          tracks: []
+        }));
+      })
+    );
+  }
 }

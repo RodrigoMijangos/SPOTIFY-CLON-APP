@@ -1,5 +1,6 @@
 export interface Song {
   cover: string,
     artist: string,
-    name: string
+    name: string,
+    url: string
 }
