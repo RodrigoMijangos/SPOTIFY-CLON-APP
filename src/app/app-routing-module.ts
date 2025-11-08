@@ -8,9 +8,17 @@ import { FirstChild } from './secondary/first-child/first-child';
 import { SecondChild } from './secondary/second-child/second-child';
 
 const routes: Routes = [
-
   {
-    path:'',
+    path: '',
+    redirectTo: '/search',
+    pathMatch: 'full'
+  },
+  {
+    path: 'search',
+    component: SearchComponent
+  },
+  {
+    path: 'player',
     component: Player
   },
   {
@@ -30,6 +38,10 @@ const routes: Routes = [
         component: SecondChild
       }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: '/search'
   }
 ];
 

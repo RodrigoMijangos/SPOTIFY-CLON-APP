@@ -1,9 +1,29 @@
-<!-- <router-outlet />
-<a routerLink="/home">HOME COMPONENT</a><br>
-<a routerLink="/secondary">SECONDARY COMPONENT</a><br>
-<a routerLink="/secondary/first">FIRST CHILD COMPONENT</a><br>
-<a routerLink="/secondary/second">SECOND CHILD COMPONENT</a><br>
+<div class="app-container">
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <!-- Barra de navegación superior -->
+    <div class="top-nav">
+      <div class="nav-buttons">
+        <button class="nav-btn" title="Ir atrás" disabled>
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="nav-btn" title="Ir adelante" disabled>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+      
+      <div class="nav-links">
+        <a routerLink="/search" routerLinkActive="active" class="nav-link">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Buscar
+        </a>
+      </div>
+    </div>
 
--->
+    <!-- Contenido de la página -->
+    <router-outlet/>
+  </div>
+</div>
 
-<router-outlet/>
+<!-- Reproductor de audio (siempre visible) -->
+<app-audio-controller></app-audio-controller>
