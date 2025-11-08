@@ -7,15 +7,17 @@ import { App } from './app';
 
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interceptor';
-import { Player } from './views/player/player';
+import { Player } from './pages/player/player';
 import { SharedModule } from './shared/shared-module';
-import { SearchResults } from './views/search-results/search-results';
+import { SearchResults } from './pages/search-results/search-results';
+import { Views } from './views/views';
 
 @NgModule({
   declarations: [
     App,
     Player,
-    SearchResults
+    SearchResults,
+    Views
   ],
   imports: [
     BrowserModule,

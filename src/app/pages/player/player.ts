@@ -25,7 +25,7 @@ export class Player implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadRandomAlbums();  // 12 álbumes random
+    this.loadRandomAlbums(); 
   }
 
 
@@ -33,9 +33,9 @@ export class Player implements OnInit {
     this._spotifyAlbum.getRandomAlbums(12).subscribe({
       next: (albums) => {
         this.randomAlbums = albums;
-        console.log('✅ 12 álbumes aleatorios cargados:', albums);
+        console.log('12 álbumes aleatorios cargados:', albums);
       },
-      error: (err) => console.error('❌ Error álbumes:', err)
+      error: (err) => console.error('Error álbumes:', err)
     });
   }
 

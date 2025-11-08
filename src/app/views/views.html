@@ -1,1 +1,19 @@
-<p>views works!</p>
+<main class="player-wrapper">
+
+    <nav class="search-bar">
+        <app-search-bar></app-search-bar>
+    </nav>
+
+    <section class="player">
+        <div class="main-view">
+            <router-outlet></router-outlet>
+        </div>
+
+        <aside class="aside">
+            <app-song-info [song]="album?.tracks?.at(-1)" [cover]="album?.images?.at(0)" displayMode="main"></app-song-info>
+            <app-playlist></app-playlist>
+        </aside>
+    </section>
+    
+    <app-audio-controller></app-audio-controller>
+</main>

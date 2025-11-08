@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Album } from '../interfaces/album';
 
 @Component({
   selector: 'app-views',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './views.css'
 })
 export class Views {
-
+  album?: Album;
 }

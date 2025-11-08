@@ -1,0 +1,22 @@
+
+.recommended-section {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.recommended-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    row-gap: 32px;
+    column-gap: 32px;
+    justify-content: center;
+}
