@@ -5,11 +5,15 @@ import { Views } from './views/views';
 import { SearchResults } from './pages/search-results/search-results';
 
 const routes: Routes = [
-
   {
     path: '',
     component: Views,
     children: [
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+      },
       {
         path: 'home',
         component: Player
@@ -19,6 +23,10 @@ const routes: Routes = [
         component: SearchResults
       }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
 

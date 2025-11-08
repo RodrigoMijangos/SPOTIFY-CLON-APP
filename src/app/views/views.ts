@@ -8,5 +8,15 @@ import { Album } from '../interfaces/album';
   styleUrl: './views.css'
 })
 export class Views {
-  album?: Album;
+  
+   album: Album | undefined;
+  currentSong: Track | undefined;
+  currentCover: Image | undefined;
+  playlist: Track[] = [];
+
+  constructor(
+    private sharedData: SharedDataService,
+    private spotifyService: SpotifyAlbumService
+  ) {}
+
 }
