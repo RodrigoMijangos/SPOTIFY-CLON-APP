@@ -10,7 +10,11 @@
         </div>
 
         <aside class="aside">
-            <app-song-info [song]="album?.tracks?.at(-1)" [cover]="album?.images?.at(0)" displayMode="main"></app-song-info>
+            @if (currentSong()) {
+            <app-song-info [song]="currentSong()" [cover]="currentCover()" displayMode="main"></app-song-info>
+            } @else {
+            <div class="no-song">Selecciona un álbum para reproducir la primera canción</div>
+            }
             <app-playlist></app-playlist>
         </aside>
     </section>
