@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
-import { Track } from '../interfaces/track';
-import { Image } from '../interfaces/image';
+import { Track } from '../../../interfaces/track';
+import { Image } from '../../../interfaces/image';
 
 @Component({
   selector: 'app-song-info',
@@ -11,8 +11,8 @@ import { Image } from '../interfaces/image';
 
 export class SongInfo {
   display_mode = input.required<string>({ alias: 'displayMode'});
-  song = input.required<Track | undefined>();
-  cover = input.required<Image | undefined>();
+  song = input<Track | undefined>();
+  cover = input<Image | undefined>();
 
   displayMode(){
     return this.display_mode();

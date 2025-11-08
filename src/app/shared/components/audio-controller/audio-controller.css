@@ -4,6 +4,8 @@
     gap: 8px;
     background-color: #242700;
     padding: 20px 0;
+    align-items: center;
+    justify-content: center;
 }
 
 .player-buttons {

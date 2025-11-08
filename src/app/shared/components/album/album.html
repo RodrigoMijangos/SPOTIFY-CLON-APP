@@ -1,4 +1,4 @@
-<div class="album-card">
+<div class="album-card" (click)="onAlbumClick()">
     <img [src]="album().images[0]?.url" [alt]="album().name" loading="lazy">
     <p class="album-name">{{ album().name }}</p>
 </div>

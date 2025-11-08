@@ -1,0 +1,7 @@
+<div class="song-wrapper">
+    <img [src]="cover()?.url ?? ''" alt="" class="card-song-img">
+    <div class="card-song-details">
+        <h1 class="card-song-title">{{song()?.name ?? 'Sin título'}}</h1>
+        <h3 class="card-song-artist">{{song()?.artists?.[0]?.name ?? 'Artista desconocido'}}</h3>
+    </div>
+</div>

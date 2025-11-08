@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, signal, Input } from '@angular/core';
-import { Song } from '../interfaces/song';
+import { Song } from '../../../interfaces/song';
 
 @Component({
   selector: 'app-audio-controller',
@@ -22,7 +22,7 @@ export class AudioController {
     const audio = this.audioElement.nativeElement;
     
     if (this.currentSong?.url) {
-      audio.src = this.currentSong.url;
+      this.currentSong.url;
     }
     
     audio.addEventListener('timeupdate', () => {

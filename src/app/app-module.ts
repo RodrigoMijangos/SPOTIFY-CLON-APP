@@ -7,27 +7,20 @@ import { App } from './app';
 
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthLeaderInterceptor } from './interceptors/add-auth-leader-interceptor';
-import { SongInfo } from './song-info/song-info';
-import { AudioController } from './audio-controller/audio-controller';
-import { Player } from './player/player';
-import { Album } from './album/album';
-import { SearchBar } from './search-bar/search-bar';
-import { Playlist } from './playlist/playlist';
+import { Player } from './views/player/player';
+import { SharedModule } from './shared/shared-module';
+import { SearchResults } from './views/search-results/search-results';
 
 @NgModule({
   declarations: [
     App,
-    SongInfo,
-    AudioController,
     Player,
-    Album,
-    SearchBar,
-    Playlist
+    SearchResults
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    SharedModule
   ],
   providers: [
     provideHttpClient(
