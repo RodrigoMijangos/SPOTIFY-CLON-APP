@@ -44,7 +44,7 @@ export class SpotifySearchService {
 
   constructor(private _http: HttpClient) {}
 
-  search(query: string, type: string = 'track,album,artist,playlist', limit: number = 20): Observable<SearchResult> {
+  search(query: string, type: string = 'track', limit: number = 20): Observable<SearchResult> {
     const params = new HttpParams().set('q', query).set('type', type).set('limit', limit.toString()).set('market', 'US');
     return this._http.get<SpotifySearchResponse>(`${environment.API_URL}/search`, { params }).pipe(
       map(response => ({ tracks: response.tracks?.items || [], albums: response.albums?.items || [], artists: response.artists?.items || [], playlists: response.playlists?.items || [] }))

@@ -33,112 +33,57 @@
   @if (showResults && !isSearching) {
     <div class="search-results">
       
-      <!-- Mejor resultado -->
+      <!-- Reproductor principal -->
       @if (searchResults.tracks?.length > 0) {
-        <div class="top-result-section">
-          <h2>Mejor resultado</h2>
-          <div class="top-result" (click)="playTrack(searchResults.tracks[0])">
-            <div class="result-image">
-              @if (searchResults.tracks[0].album?.images?.[0]) {
-                <img [src]="searchResults.tracks[0].album.images[0].url" [alt]="searchResults.tracks[0].name">
-              } @else {
-                <div class="placeholder-image">
-                  <i class="fa-solid fa-music"></i>
-                </div>
-              }
-              <div class="play-overlay">
-                <i class="fa-solid fa-play"></i>
+        <div class="main-player">
+          <div class="player-background" [style.background-image]="'url(' + (searchResults.tracks[0].album?.images?.[0]?.url || 'assets/default-album.svg') + ')'">
+            <div class="player-overlay">
+              <div class="album-art">
+                <img [src]="searchResults.tracks[0].album?.images?.[0]?.url || 'assets/default-album.svg'" [alt]="searchResults.tracks[0].name">
               </div>
-            </div>
-            <div class="result-info">
-              <h3>{{ searchResults.tracks[0].name }}</h3>
-              <p>Canción • {{ getArtistNames(searchResults.tracks[0].artists) }}</p>
+              
+              <div class="track-info">
+                <h1>{{ searchResults.tracks[0].name }}</h1>
+                <p>{{ getArtistNames(searchResults.tracks[0].artists) }}</p>
+              </div>
+              
+              <div class="player-controls">
+                <button class="control-btn" (click)="previousTrack()">
+                  <i class="fa-solid fa-backward-step"></i>
+                  <span>last</span>
+                </button>
+                
+                <button class="play-btn" (click)="playTrack(searchResults.tracks[0])">
+                  <i class="fa-solid fa-play"></i>
+                  <span>Play</span>
+                </button>
+                
+                <button class="control-btn" (click)="nextTrack()">
+                  <i class="fa-solid fa-forward-step"></i>
+                  <span>forward</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       }
 
-      <!-- Canciones -->
+      <!-- Lista de canciones -->
       @if (searchResults.tracks?.length > 1) {
-        <div class="results-section">
-          <h2>Canciones</h2>
+        <div class="tracks-section">
+          <h2>Más canciones</h2>
           <div class="tracks-list">
-            @for (track of searchResults.tracks.slice(1, 5); track track.id) {
-              <div class="track-result" (click)="playTrack(track)">
+            @for (track of searchResults.tracks.slice(1); track track.id) {
+              <div class="track-item" (click)="playTrack(track)">
+                <div class="track-number">{{ $index + 2 }}</div>
                 <div class="track-image">
-                  @if (track.album?.images?.[0]) {
-                    <img [src]="track.album.images[0].url" [alt]="track.name">
-                  } @else {
-                    <div class="placeholder-image">
-                      <i class="fa-solid fa-music"></i>
-                    </div>
-                  }
-                  <div class="play-overlay">
-                    <i class="fa-solid fa-play"></i>
-                  </div>
+                  <img [src]="track.album?.images?.[0]?.url || 'assets/default-album.svg'" [alt]="track.name">
                 </div>
-                <div class="track-info">
+                <div class="track-details">
                   <h4>{{ track.name }}</h4>
                   <p>{{ getArtistNames(track.artists) }}</p>
                 </div>
-                <div class="track-duration">
-                  {{ formatDuration(track.duration_ms) }}
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      <!-- Artistas -->
-      @if (searchResults.artists?.length > 0) {
-        <div class="results-section">
-          <h2>Artistas</h2>
-          <div class="artists-grid">
-            @for (artist of searchResults.artists.slice(0, 4); track artist.id) {
-              <div class="artist-result" (click)="followArtist(artist)">
-                <div class="artist-image">
-                  @if (artist.images?.[0]) {
-                    <img [src]="artist.images[0].url" [alt]="artist.name">
-                  } @else {
-                    <div class="placeholder-image">
-                      <i class="fa-solid fa-user"></i>
-                    </div>
-                  }
-                </div>
-                <div class="artist-info">
-                  <h4>{{ artist.name }}</h4>
-                  <p>Artista</p>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      <!-- Álbumes -->
-      @if (searchResults.albums?.length > 0) {
-        <div class="results-section">
-          <h2>Álbumes</h2>
-          <div class="albums-grid">
-            @for (album of searchResults.albums.slice(0, 4); track album.id) {
-              <div class="album-result" (click)="playAlbum(album)">
-                <div class="album-image">
-                  @if (album.images?.[0]) {
-                    <img [src]="album.images[0].url" [alt]="album.name">
-                  } @else {
-                    <div class="placeholder-image">
-                      <i class="fa-solid fa-compact-disc"></i>
-                    </div>
-                  }
-                  <div class="play-overlay">
-                    <i class="fa-solid fa-play"></i>
-                  </div>
-                </div>
-                <div class="album-info">
-                  <h4>{{ album.name }}</h4>
-                  <p>{{ album.release_date?.substring(0, 4) }} • {{ getArtistNames(album.artists) }}</p>
-                </div>
+                <div class="track-duration">{{ formatDuration(track.duration_ms) }}</div>
               </div>
             }
           </div>
