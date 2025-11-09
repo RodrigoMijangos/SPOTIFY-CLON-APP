@@ -41,21 +41,21 @@
               
               <div class="track-info">
                 <h1>{{ searchResults.tracks[0].name }}</h1>
-                <p>{{ getArtistNames(searchResults.tracks[0].artists) }}</p>
+                <p>{{ obtenerNombresArtistas(searchResults.tracks[0].artists) }}</p>
               </div>
               
               <div class="player-controls">
-                <button class="control-btn" (click)="previousTrack()">
+                <button class="control-btn" (click)="cancionAnterior()">
                   <i class="fa-solid fa-backward-step"></i>
                   <span>last</span>
                 </button>
                 
-                <button class="play-btn" (click)="playTrack(searchResults.tracks[0])">
+                <button class="play-btn" (click)="reproducirCancion(searchResults.tracks[0])">
                   <i class="fa-solid fa-play"></i>
                   <span>Play</span>
                 </button>
                 
-                <button class="control-btn" (click)="nextTrack()">
+                <button class="control-btn" (click)="siguienteCancion()">
                   <i class="fa-solid fa-forward-step"></i>
                   <span>forward</span>
                 </button>
@@ -70,19 +70,29 @@
         <div class="tracks-section">
           <h2>Más canciones</h2>
           <div class="tracks-list">
-            @for (track of searchResults.tracks.slice(1); track track.id) {
-              <div class="track-item" (click)="playTrack(track)">
+            @for (cancion of searchResults.tracks.slice(1); track cancion.id) {
+              <div class="track-item" (click)="reproducirCancion(cancion)">
                 <div class="track-number">{{ $index + 2 }}</div>
                 <div class="track-image">
-                  <img [src]="track.album?.images?.[0]?.url || 'assets/default-album.svg'" [alt]="track.name">
+                  <img [src]="cancion.album?.images?.[0]?.url || 'assets/default-album.svg'" [alt]="cancion.name">
                 </div>
                 <div class="track-details">
-                  <h4>{{ track.name }}</h4>
-                  <p>{{ getArtistNames(track.artists) }}</p>
+                  <h4>{{ cancion.name }} @if(cancion.preview_url) {<span class="preview-badge">🎵</span>}</h4>
+                  <p>{{ obtenerNombresArtistas(cancion.artists) }}</p>
                 </div>
-                <div class="track-duration">{{ formatDuration(track.duration_ms) }}</div>
+                <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
               </div>
             }
+          </div>
+        </div>
+      }
+      
+      @if (searchResults.tracks?.length === 0 && showResults) {
+        <div class="no-results-message">
+          <div class="message-content">
+            <i class="fa fa-search" style="font-size: 48px; color: #666; margin-bottom: 16px;"></i>
+            <h3>No se encontraron resultados</h3>
+            <p>Revisa la consola del navegador (F12) para ver los detalles</p>
           </div>
         </div>
       }

@@ -44,16 +44,19 @@ export class SpotifySearchService {
 
   constructor(private _http: HttpClient) {}
 
-  search(query: string, type: string = 'track', limit: number = 20): Observable<SearchResult> {
-    const params = new HttpParams().set('q', query).set('type', type).set('limit', limit.toString()).set('market', 'US');
-    return this._http.get<SpotifySearchResponse>(`${environment.API_URL}/search`, { params }).pipe(
-      map(response => ({ tracks: response.tracks?.items || [], albums: response.albums?.items || [], artists: response.artists?.items || [], playlists: response.playlists?.items || [] }))
+  buscar(consulta: string, tipo: string = 'track', limite: number = 20): Observable<SearchResult> {
+    const parametros = new HttpParams().set('q', consulta).set('type', tipo).set('limit', limite.toString());
+    return this._http.get<SpotifySearchResponse>(`${environment.API_URL}/search`, { params: parametros }).pipe(
+      map(respuesta => ({ 
+        tracks: respuesta.tracks?.items || [], 
+        albums: respuesta.albums?.items || [], 
+        artists: respuesta.artists?.items || [], 
+        playlists: respuesta.playlists?.items || [] 
+      }))
     );
   }
 
-  searchTracks(query: string, limit: number = 20): Observable<any[]> { return this.search(query, 'track', limit).pipe(map(result => result.tracks)); }
-  searchAlbums(query: string, limit: number = 20): Observable<any[]> { return this.search(query, 'album', limit).pipe(map(result => result.albums)); }
-  searchArtists(query: string, limit: number = 20): Observable<any[]> { return this.search(query, 'artist', limit).pipe(map(result => result.artists)); }
-  getTopTracks(): Observable<any[]> { return this.searchTracks('year:2024', 50); }
-  getFeaturedPlaylists(): Observable<any[]> { return this._http.get<any>(`${environment.API_URL}/browse/featured-playlists`).pipe(map(response => response.playlists?.items || [])); }
+  buscarCanciones(consulta: string, limite: number = 20): Observable<any[]> { return this.buscar(consulta, 'track', limite).pipe(map(resultado => resultado.tracks)); }
+  buscarAlbumes(consulta: string, limite: number = 20): Observable<any[]> { return this.buscar(consulta, 'album', limite).pipe(map(resultado => resultado.albums)); }
+  buscarArtistas(consulta: string, limite: number = 20): Observable<any[]> { return this.buscar(consulta, 'artist', limite).pipe(map(resultado => resultado.artists)); }
 }

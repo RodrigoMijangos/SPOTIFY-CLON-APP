@@ -1,32 +1,26 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Track } from '../../interfaces/track';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AudioPlayerService {
   private audio = new Audio();
   private playlist: Track[] = [];
   private currentTrackIndex = 0;
   
-  // Estado del reproductor
   private currentTrackSubject = new BehaviorSubject<Track | null>(null);
   private isPlayingSubject = new BehaviorSubject<boolean>(false);
   private currentTimeSubject = new BehaviorSubject<number>(0);
   private durationSubject = new BehaviorSubject<number>(0);
   private volumeSubject = new BehaviorSubject<number>(0.7);
   
-  // Observables públicos
   currentTrack$ = this.currentTrackSubject.asObservable();
   isPlaying$ = this.isPlayingSubject.asObservable();
   currentTime$ = this.currentTimeSubject.asObservable();
   duration$ = this.durationSubject.asObservable();
   volume$ = this.volumeSubject.asObservable();
 
-  constructor() {
-    this.setupAudioEvents();
-  }
+  constructor() { this.setupAudioEvents(); }
 
   private setupAudioEvents(): void {
     this.audio.addEventListener('loadedmetadata', () => this.durationSubject.next(this.audio.duration));
@@ -46,16 +40,15 @@ export class AudioPlayerService {
   }
 
   private loadAndPlay(track: Track): void {
-    console.log('LoadAndPlay llamado con:', track);
-    if (!track.preview_url) {
-      console.log('No hay preview_url disponible para esta canción');
-      return;
-    }
-    console.log('Setting audio source:', track.preview_url);
-    this.audio.src = track.preview_url;
     this.currentTrackSubject.next(track);
-    this.audio.load();
-    this.audio.play().catch(error => console.error('Error al reproducir:', error));
+    if (track.preview_url) {
+      this.audio.src = track.preview_url;
+      this.audio.load();
+      this.audio.play().catch(console.error);
+    } else {
+      this.isPlayingSubject.next(true);
+      setTimeout(() => { this.isPlayingSubject.next(false); this.next(); }, 30000);
+    }
   }
 
   togglePlayPause(): void { this.audio.paused ? this.play() : this.pause(); }
@@ -81,9 +74,9 @@ export class AudioPlayerService {
   isPlaying(): boolean { return this.isPlayingSubject.value; }
   getCurrentTime(): number { return this.audio.currentTime; }
   getDuration(): number { return this.audio.duration || 0; }
-  formatTime(seconds: number): string {
-    if (isNaN(seconds)) return '0:00';
-    const m = Math.floor(seconds / 60), s = Math.floor(seconds % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
+  formatTime(segundos: number): string {
+    if (isNaN(segundos)) return '0:00';
+    const minutos = Math.floor(segundos / 60), segs = Math.floor(segundos % 60);
+    return `${minutos}:${segs.toString().padStart(2, '0')}`;
   }
 }

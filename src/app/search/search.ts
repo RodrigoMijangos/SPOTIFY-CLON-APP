@@ -57,6 +57,12 @@ import { Track } from '../interfaces/track';
     .default-controls .play-btn { background: rgba(255,255,255,0.9); color: #1a237e; width: 64px; height: 64px; border: none; }
     .default-controls .control-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
     .default-controls .play-btn:hover { background: white; transform: scale(1.1); }
+    
+    /* Estilos para mensajes */
+    .preview-badge { font-size: 12px; color: #1db954; margin-left: 8px; }
+    .no-results-message { padding: 40px; text-align: center; background: rgba(255,255,255,0.05); border-radius: 12px; margin: 20px; }
+    .message-content h3 { color: white; margin-bottom: 16px; font-size: 24px; }
+    .message-content p { color: #b3b3b3; margin-bottom: 16px; }
   `]
 })
 export class SearchComponent implements OnInit, OnDestroy {
@@ -82,9 +88,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.searchSubscription = this.searchSubject.pipe(
       debounceTime(300), distinctUntilChanged(),
-      switchMap(query => query.trim().length > 2 ? (this.isSearching = true, this._searchService.search(query)) : (this.isSearching = this.showResults = false, []))
+      switchMap(consulta => consulta.trim().length > 2 ? (this.isSearching = true, this._searchService.buscar(consulta)) : (this.isSearching = this.showResults = false, []))
     ).subscribe({
-      next: (results: any) => (this.searchResults = results, this.isSearching = false, this.showResults = true),
+      next: (resultados: any) => (this.searchResults = resultados, this.isSearching = false, this.showResults = true),
       error: () => (this.isSearching = this.showResults = false)
     });
   }
@@ -96,21 +102,17 @@ export class SearchComponent implements OnInit, OnDestroy {
   onSearchInput(event: any): void { this.searchQuery = event.target.value; this.searchSubject.next(this.searchQuery); }
   clearSearch(): void { this.searchQuery = ''; this.showResults = false; this.searchResults = { tracks: [], albums: [], artists: [], playlists: [] }; }
 
-  playTrack(track: any): void {
-    console.log('Intentando reproducir:', track);
-    console.log('Track preview_url:', track?.preview_url);
+  reproducirCancion(cancion: any): void {
     if (this.searchResults.tracks?.length > 0) this._audioPlayer.setPlaylist(this.searchResults.tracks);
-    this._audioPlayer.playTrack(track);
+    this._audioPlayer.playTrack(cancion);
   }
 
-  playAlbum(album: any): void { console.log('Reproducir álbum:', album); }
-  followArtist(artist: any): void { console.log('Seguir artista:', artist); }
-  previousTrack(): void { this._audioPlayer.previous(); }
-  nextTrack(): void { this._audioPlayer.next(); }
-  formatDuration(duration: number): string {
-    if (!duration) return '0:00';
-    const m = Math.floor(duration / 60000), s = Math.floor((duration % 60000) / 1000);
-    return `${m}:${s.toString().padStart(2, '0')}`;
+  cancionAnterior(): void { this._audioPlayer.previous(); }
+  siguienteCancion(): void { this._audioPlayer.next(); }
+  formatearDuracion(duracion: number): string {
+    if (!duracion) return '0:00';
+    const minutos = Math.floor(duracion / 60000), segundos = Math.floor((duracion % 60000) / 1000);
+    return `${minutos}:${segundos.toString().padStart(2, '0')}`;
   }
-  getArtistNames(artists: any[]): string { return artists?.map(artist => artist.name).join(', ') || 'Artista desconocido'; }
+  obtenerNombresArtistas(artistas: any[]): string { return artistas?.map(artista => artista.name).join(', ') || 'Artista desconocido'; }
 }

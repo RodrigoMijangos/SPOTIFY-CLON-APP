@@ -17,7 +17,9 @@ export class App implements OnInit{
   ){}
 
   ngOnInit(): void {
-    if(!this._cookieStorage.exists('access_token') || !this._cookieStorage.isCookieValid('access_token')) this._spotifyLogin.getAccessToken().subscribe();
+    if(!this._cookieStorage.exists('access_token') || !this._cookieStorage.isCookieValid('access_token')) {
+      this._spotifyLogin.getAccessToken().subscribe();
+    }
   }
 
 }
