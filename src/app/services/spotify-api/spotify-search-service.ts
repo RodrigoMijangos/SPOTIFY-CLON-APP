@@ -86,7 +86,7 @@ export class SpotifySearchService {
   }
 
   getFeaturedPlaylists(): Observable<any[]> {
-    return this._http.get<any>(`${environment.SPOTIFY_API_URL}/browse/featured-playlists`)
+    return this._http.get<any>(`${environment.API_URL}/browse/featured-playlists`)
       .pipe(
         map(response => response.playlists?.items || [])
       );
