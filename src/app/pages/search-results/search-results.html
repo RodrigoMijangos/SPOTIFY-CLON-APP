@@ -1,1 +1,31 @@
-<p>search-results works!</p>
+<section class="search-results-container">
+    <h2 class="search-title">Resultados para: "{{searchQuery()}}"</h2>
+
+    @if (isLoading()) {
+        <div class="loading">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Buscando...
+        </div>
+    } @else if (searchError()) {
+        <div class="error-message">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{searchError()}}
+        </div>
+    } @else if (searchResults().length === 0) {
+        <div class="no-results">
+            <i class="fa-solid fa-music-slash"></i>
+            No se encontraron resultados
+        </div>
+    } @else {
+        <div class="albums-grid">
+            @for (album of searchResults(); track album.id) {
+                <div class="album-card" (click)="onAlbumClick(album)">
+                    @if (album.images && album.images.length > 0) {
+                        <img [src]="album.images[0].url" [alt]="album.name">
+                    }
+                    <h3>{{album.name}}</h3>
+                </div>
+            }
+        </div>
+    }
+</section>
