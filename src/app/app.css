@@ -35,31 +35,7 @@
   justify-content: space-between;
 }
 
-.nav-buttons {
-  display: flex;
-  gap: 16px;
-}
-
-.nav-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 14px;
-  backdrop-filter: blur(10px);
-}
-
-.nav-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
-}
-
-.bars-btn {
-  margin-left: auto;
-}
+/* Estilos de navegación eliminados */
 
 /* Scrollbar personalizado */
 .main-content::-webkit-scrollbar {

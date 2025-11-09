@@ -46,11 +46,16 @@ export class AudioPlayerService {
   }
 
   private loadAndPlay(track: Track): void {
-    if (!track.preview_url) return;
+    console.log('LoadAndPlay llamado con:', track);
+    if (!track.preview_url) {
+      console.log('No hay preview_url disponible para esta canción');
+      return;
+    }
+    console.log('Setting audio source:', track.preview_url);
     this.audio.src = track.preview_url;
     this.currentTrackSubject.next(track);
     this.audio.load();
-    this.audio.play().catch(console.error);
+    this.audio.play().catch(error => console.error('Error al reproducir:', error));
   }
 
   togglePlayPause(): void { this.audio.paused ? this.play() : this.pause(); }

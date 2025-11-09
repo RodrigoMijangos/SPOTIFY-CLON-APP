@@ -1,7 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { SongInfo } from './song-info/song-info';
@@ -15,29 +14,11 @@ import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
 
 @NgModule({
-  declarations: [
-    App,
-    SongInfo,
-    AudioController,
-    Playlist,
-    Player,
-    SearchComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule
-  ],
+  declarations: [App, SongInfo, AudioController, Playlist, Player, SearchComponent],
+  imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
-    provideHttpClient(
-      withInterceptors([
-        authInterceptor,
-        addAuthHeaderInterceptor
-      ])
-    ),
-    CookieService,
+    provideBrowserGlobalErrorListeners(), provideZonelessChangeDetection(),
+    provideHttpClient(withInterceptors([authInterceptor, addAuthHeaderInterceptor])), CookieService
   ],
   bootstrap: [App]
 })

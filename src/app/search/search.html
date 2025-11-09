@@ -2,7 +2,6 @@
   <!-- Barra de búsqueda -->
   <div class="search-header">
     <div class="search-bar">
-      <i class="fa-solid fa-magnifying-glass search-icon"></i>
       <input 
         type="text" 
         placeholder="¿Qué te apetece escuchar?"
@@ -12,9 +11,7 @@
         autocomplete="off"
       >
       @if (searchQuery) {
-        <button class="clear-btn" (click)="clearSearch()" title="Limpiar búsqueda">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="clear-btn" (click)="clearSearch()" title="Limpiar búsqueda">×</button>
       }
     </div>
   </div>
@@ -95,25 +92,35 @@
 
   <!-- Estado inicial -->
   @if (!showResults && !isSearching && !searchQuery) {
-    <div class="initial-state">
-      <div class="browse-section">
-        <h2>Explorar todo</h2>
-        <div class="browse-categories">
-          <div class="category-card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-            <h3>Música</h3>
-            <i class="fa-solid fa-music"></i>
-          </div>
-          <div class="category-card" style="background: linear-gradient(135deg, #4ecdc4, #44bd87);">
-            <h3>Podcasts</h3>
-            <i class="fa-solid fa-podcast"></i>
-          </div>
-          <div class="category-card" style="background: linear-gradient(135deg, #a8e6cf, #88cc80);">
-            <h3>En vivo</h3>
-            <i class="fa-solid fa-broadcast-tower"></i>
-          </div>
-          <div class="category-card" style="background: linear-gradient(135deg, #ffd93d, #f39c12);">
-            <h3>Para ti</h3>
-            <i class="fa-solid fa-heart"></i>
+    <div class="default-view">
+      <div class="default-player">
+        <div class="default-background">
+          <div class="default-overlay">
+            <div class="default-album">
+              <i class="fa fa-music"></i>
+            </div>
+            
+            <div class="default-info">
+              <h1>Tu música, tu mundo</h1>
+              <p>Descubre millones de canciones</p>
+            </div>
+            
+            <div class="default-controls">
+              <button class="control-btn" disabled>
+                <i class="fa-solid fa-backward-step"></i>
+                <span>last</span>
+              </button>
+              
+              <button class="play-btn" disabled>
+                <i class="fa-solid fa-play"></i>
+                <span>Play</span>
+              </button>
+              
+              <button class="control-btn" disabled>
+                <i class="fa-solid fa-forward-step"></i>
+                <span>forward</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
