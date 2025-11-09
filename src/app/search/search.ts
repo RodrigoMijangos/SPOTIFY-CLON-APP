@@ -8,7 +8,7 @@ import { Track } from '../interfaces/track';
   selector: 'app-search',
   standalone: false,
   templateUrl: './search.html',
-  styleUrl: './search.css'
+  styles: [``]
 })
 export class SearchComponent implements OnInit, OnDestroy {
 

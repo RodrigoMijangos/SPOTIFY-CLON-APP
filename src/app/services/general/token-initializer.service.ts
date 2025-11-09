@@ -43,9 +43,8 @@ export class TokenInitializerService {
     this.getNewToken();
   }
 
-  // Verificar si el token es válido
   isTokenValid(): boolean {
     const token = this.cookieService.getKeyValue('access_token');
-    return token && token !== '';
+    return Boolean(token && token !== '');
   }
 }
