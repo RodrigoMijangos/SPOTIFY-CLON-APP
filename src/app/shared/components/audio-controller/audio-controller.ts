@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, signal, Input } from '@angular/core';
+import { Component, ElementRef, ViewChild, signal, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { Track } from '../../../interfaces/track';
 import { PlayerStateService } from '../../../services/general/player-state.service';
 
@@ -8,7 +8,7 @@ import { PlayerStateService } from '../../../services/general/player-state.servi
   templateUrl: './audio-controller.html',
   styleUrl: './audio-controller.css'
 })
-export class AudioController {
+export class AudioController implements OnChanges {
   @ViewChild('audio') audioElement!: ElementRef<HTMLAudioElement>;
   @Input() currentSong?: Track;
   @Input() playlist: Track[] = [];
@@ -18,6 +18,45 @@ export class AudioController {
   duration = signal(0);
   progress = signal(0);
   currentIndex = 0;
+
+  constructor(private playerState: PlayerStateService) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    // cuando cambia la canción actual
+    if (changes['currentSong'] && changes['currentSong'].currentValue) {
+      console.log('Nueva canción recibida:', changes['currentSong'].currentValue);
+      this.loadSong(changes['currentSong'].currentValue);
+    }
+  }
+
+  private async tryLoadAudio(url: string) {
+    const audio = this.audioElement.nativeElement;
+    
+    try {
+      // intentar cargar el audio
+      audio.src = url;
+      
+      // esperar a que se cargue la metadata
+      await new Promise((resolve, reject) => {
+        const loadHandler = () => {
+          console.log('Audio metadata cargada. Duración:', audio.duration);
+          resolve(true);
+        };
+        const errorHandler = (error: any) => {
+          console.error('Error al cargar el audio:', error);
+          reject(error);
+        };
+        
+        audio.addEventListener('loadedmetadata', loadHandler, { once: true });
+        audio.addEventListener('error', errorHandler, { once: true });
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error al cargar el audio:', error);
+      return false;
+    }
+  }
 
   ngAfterViewInit() {
     const audio = this.audioElement.nativeElement;
@@ -82,18 +121,31 @@ export class AudioController {
     this.loadSong(this.playlist[this.currentIndex]);
   }
 
-  loadSong(song: Track) {
+  async loadSong(song: Track) {
     if (!song?.preview_url) {
       console.error('Esta canción no tiene vista previa disponible');
       return;
     }
 
-    const audio = this.audioElement.nativeElement;
-    this.currentSong = song;
-    audio.src = song.preview_url;
+    console.log('Intentando cargar canción:', song.name);
     
-    if (this.isPlaying()) {
-      audio.play();
+    // Resetear estados
+    this.currentTime.set(0);
+    this.duration.set(0);
+    this.progress.set(0);
+    this.isPlaying.set(false);
+
+    // Intentar cargar el audio
+    const loaded = await this.tryLoadAudio(song.preview_url);
+    
+    if (loaded) {
+      console.log('Canción cargada exitosamente');
+      // Si estaba reproduciendo, continuar reproduciendo
+      if (this.isPlaying()) {
+        this.audioElement.nativeElement.play();
+      }
+    } else {
+      console.error('No se pudo cargar la canción');
     }
   }
 

@@ -9,7 +9,6 @@ export class SpotifyLoginService {
   constructor(private _http: HttpClient) {
    } 
 
-
   getAccessToken(): Observable<any> { 
      const body = new HttpParams()
       .set('grant_type','client_credentials')

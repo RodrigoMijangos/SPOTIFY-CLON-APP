@@ -59,7 +59,6 @@ export class SpotifyAlbumService {
   }
 
   getRandomAlbums(count: number = 12): Observable<Album[]> {
-    // Lista de géneros populares para búsqueda aleatoria
     const genres = ['pop', 'rock', 'jazz', 'electronic', 'hip-hop', 'indie', 'latin', 'r&b'];
     const randomGenre = genres[Math.floor(Math.random() * genres.length)];
     const randomOffset = Math.floor(Math.random() * 100);

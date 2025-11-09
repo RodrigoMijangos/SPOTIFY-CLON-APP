@@ -5,6 +5,7 @@ import { SearchBar } from './components/search-bar/search-bar';
 import { AudioController } from './components/audio-controller/audio-controller';
 import { Playlist } from './components/playlist/playlist';
 import { Album } from './components/album/album';
+import { AppRoutingModule } from "src/app/app-routing-module";
 
 
 @NgModule({
@@ -16,8 +17,9 @@ import { Album } from './components/album/album';
     SearchBar
   ],
   imports: [
-    CommonModule
-  ],
+    CommonModule,
+    AppRoutingModule
+],
   exports: [
     SongInfo,
     AudioController,

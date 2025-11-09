@@ -18,19 +18,4 @@ export class CookiesStorageService {
     return this._cookieService.get(key);
   }
 
-  exists(key: string): boolean {
-    return this._cookieService.check(key);
-  }
-
-  isCookieValid(key: string): boolean {
-    return this._cookieService.check(key) && this._cookieService.get(key) !== '';
-  }
-
-  deleteCookie(key: string): void {
-    this._cookieService.delete(key);
-  }
-
-  deleteAll(): void {
-    this._cookieService.deleteAll();
-  }
 }

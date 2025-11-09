@@ -12,7 +12,7 @@ import { Image } from '../interfaces/image';
 })
 export class Views implements OnInit{
 
-  // Señales locales; las alimentamos desde los observables del servicio
+  // señales locales; las alimentamos desde los observables del servicio de app
   randomAlbums = signal<Album[]>([]);
   currentAlbum = signal<Album | undefined>(undefined);
   currentSong = signal<Track | undefined>(undefined);
@@ -20,7 +20,6 @@ export class Views implements OnInit{
   playlist = signal<Track[]>([]);
 
   constructor(private playerState: PlayerStateService) {
-
   }
 
   ngOnInit(): void {

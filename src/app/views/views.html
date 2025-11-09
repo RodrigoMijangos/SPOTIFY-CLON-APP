@@ -17,5 +17,8 @@
         </aside>
     </section>
     
-    <app-audio-controller></app-audio-controller>
+    <app-audio-controller 
+        [currentSong]="currentSong()" 
+        [playlist]="playlist()">
+    </app-audio-controller>
 </main>

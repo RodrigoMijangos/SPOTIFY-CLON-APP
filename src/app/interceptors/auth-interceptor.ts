@@ -5,6 +5,7 @@ import { CookiesStorageService } from '../services/cookie-storage-service';
 import { environment } from 'src/environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  
   const cookieService = inject(CookiesStorageService);
   return next(req).pipe(
     tap(event => {
