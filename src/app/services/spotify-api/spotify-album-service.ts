@@ -17,43 +17,12 @@ export class SpotifyAlbumService {
   ){}
 
   getAlbum(id: string): Observable<Album>{
-    return this._http.get<SpotifyAlbumResponse>(
-      `${environment.API_URL}/albums/${id}`
-    ).pipe(
-      map(
-        apiresponse => {
-
-          const mappedTracks: Track[] = apiresponse.tracks.items.map(
-            track => ({
-              id: track.id,
-              name: track.name,
-              duration_ms: track.duration_ms,
-              href: track.href,
-              artists: track.artists.map(artist => ({
-                id: artist.id,
-                name: artist.name
-              }))
-            })
-          );
-
-          const mappedImages: Image[] = apiresponse.images.map(
-            image => ({
-              width: image.width,
-              heigth: image.heigth,
-              url: image.url
-            })
-          );
-
-          return {
-            id: apiresponse.id,
-            name: apiresponse.name,
-            total_tracks: apiresponse.total_tracks,
-            images: mappedImages,
-            href: apiresponse.href,
-            tracks: mappedTracks,
-          }
-        }
-      )
+    return this._http.get<SpotifyAlbumResponse>(`${environment.API_URL}/albums/${id}`).pipe(
+      map(apiresponse => ({
+        id: apiresponse.id, name: apiresponse.name, total_tracks: apiresponse.total_tracks, href: apiresponse.href,
+        tracks: apiresponse.tracks.items.map(track => ({ id: track.id, name: track.name, duration_ms: track.duration_ms, href: track.href, artists: track.artists.map(artist => ({ id: artist.id, name: artist.name })) })),
+        images: apiresponse.images.map(image => ({ width: image.width, heigth: image.heigth, url: image.url }))
+      }))
     )
   }
   
