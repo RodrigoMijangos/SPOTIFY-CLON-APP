@@ -29,153 +29,56 @@ export class AudioPlayerService {
   }
 
   private setupAudioEvents(): void {
-    // Cuando se carga la metadata del audio
-    this.audio.addEventListener('loadedmetadata', () => {
-      this.durationSubject.next(this.audio.duration);
-    });
-
-    // Actualización del tiempo actual
-    this.audio.addEventListener('timeupdate', () => {
-      this.currentTimeSubject.next(this.audio.currentTime);
-    });
-
-    // Cuando termina una canción
-    this.audio.addEventListener('ended', () => {
-      this.next();
-    });
-
-    // Cuando empieza a reproducir
-    this.audio.addEventListener('play', () => {
-      this.isPlayingSubject.next(true);
-    });
-
-    // Cuando se pausa
-    this.audio.addEventListener('pause', () => {
-      this.isPlayingSubject.next(false);
-    });
-
-    // Error de carga
-    this.audio.addEventListener('error', (e) => {
-      console.error('Error reproduciendo audio:', e);
-      this.isPlayingSubject.next(false);
-    });
+    this.audio.addEventListener('loadedmetadata', () => this.durationSubject.next(this.audio.duration));
+    this.audio.addEventListener('timeupdate', () => this.currentTimeSubject.next(this.audio.currentTime));
+    this.audio.addEventListener('ended', () => this.next());
+    this.audio.addEventListener('play', () => this.isPlayingSubject.next(true));
+    this.audio.addEventListener('pause', () => this.isPlayingSubject.next(false));
+    this.audio.addEventListener('error', () => this.isPlayingSubject.next(false));
   }
 
-  // Establecer playlist
-  setPlaylist(tracks: Track[]): void {
-    this.playlist = tracks;
-    this.currentTrackIndex = 0;
-  }
+  setPlaylist(tracks: Track[]): void { this.playlist = tracks; this.currentTrackIndex = 0; }
 
-  // Reproducir una canción específica
   playTrack(track: Track): void {
-    // Buscar el índice de la canción en la playlist
     const trackIndex = this.playlist.findIndex(t => t.id === track.id);
-    if (trackIndex !== -1) {
-      this.currentTrackIndex = trackIndex;
-    } else {
-      // Si no está en la playlist, agregarla y reproducirla
-      this.playlist = [track];
-      this.currentTrackIndex = 0;
-    }
-
+    this.currentTrackIndex = trackIndex !== -1 ? trackIndex : (this.playlist = [track], 0);
     this.loadAndPlay(track);
   }
 
   private loadAndPlay(track: Track): void {
-    if (!track.preview_url) {
-      console.warn('No hay preview URL disponible para esta canción');
-      return;
-    }
-
+    if (!track.preview_url) return;
     this.audio.src = track.preview_url;
     this.currentTrackSubject.next(track);
-    
     this.audio.load();
-    this.audio.play().catch(error => {
-      console.error('Error al reproducir:', error);
-    });
+    this.audio.play().catch(console.error);
   }
 
-  // Play/Pause
-  togglePlayPause(): void {
-    if (this.audio.paused) {
-      this.play();
-    } else {
-      this.pause();
-    }
-  }
+  togglePlayPause(): void { this.audio.paused ? this.play() : this.pause(); }
+  play(): void { if (this.audio.src) this.audio.play().catch(console.error); }
+  pause(): void { this.audio.pause(); }
 
-  play(): void {
-    if (this.audio.src) {
-      this.audio.play().catch(error => {
-        console.error('Error al reproducir:', error);
-      });
-    }
-  }
-
-  pause(): void {
-    this.audio.pause();
-  }
-
-  // Siguiente canción
   next(): void {
-    if (this.playlist.length === 0) return;
-    
+    if (!this.playlist.length) return;
     this.currentTrackIndex = (this.currentTrackIndex + 1) % this.playlist.length;
-    const nextTrack = this.playlist[this.currentTrackIndex];
-    this.loadAndPlay(nextTrack);
+    this.loadAndPlay(this.playlist[this.currentTrackIndex]);
   }
 
-  // Canción anterior
   previous(): void {
-    if (this.playlist.length === 0) return;
-    
-    this.currentTrackIndex = this.currentTrackIndex === 0 
-      ? this.playlist.length - 1 
-      : this.currentTrackIndex - 1;
-    const prevTrack = this.playlist[this.currentTrackIndex];
-    this.loadAndPlay(prevTrack);
+    if (!this.playlist.length) return;
+    this.currentTrackIndex = this.currentTrackIndex === 0 ? this.playlist.length - 1 : this.currentTrackIndex - 1;
+    this.loadAndPlay(this.playlist[this.currentTrackIndex]);
   }
 
-  // Cambiar tiempo de reproducción
-  seekTo(time: number): void {
-    this.audio.currentTime = time;
-  }
-
-  // Cambiar volumen
-  setVolume(volume: number): void {
-    this.audio.volume = Math.max(0, Math.min(1, volume));
-    this.volumeSubject.next(this.audio.volume);
-  }
-
-  // Obtener volumen actual
-  getVolume(): number {
-    return this.audio.volume;
-  }
-
-  // Obtener información actual
-  getCurrentTrack(): Track | null {
-    return this.currentTrackSubject.value;
-  }
-
-  isPlaying(): boolean {
-    return this.isPlayingSubject.value;
-  }
-
-  getCurrentTime(): number {
-    return this.audio.currentTime;
-  }
-
-  getDuration(): number {
-    return this.audio.duration || 0;
-  }
-
-  // Formatear tiempo
+  seekTo(time: number): void { this.audio.currentTime = time; }
+  setVolume(volume: number): void { this.audio.volume = Math.max(0, Math.min(1, volume)); this.volumeSubject.next(this.audio.volume); }
+  getVolume(): number { return this.audio.volume; }
+  getCurrentTrack(): Track | null { return this.currentTrackSubject.value; }
+  isPlaying(): boolean { return this.isPlayingSubject.value; }
+  getCurrentTime(): number { return this.audio.currentTime; }
+  getDuration(): number { return this.audio.duration || 0; }
   formatTime(seconds: number): string {
     if (isNaN(seconds)) return '0:00';
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    const m = Math.floor(seconds / 60), s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
   }
 }
