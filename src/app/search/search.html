@@ -71,16 +71,24 @@
           <h2>Más canciones</h2>
           <div class="tracks-list">
             @for (cancion of searchResults.tracks.slice(1); track cancion.id) {
-              <div class="track-item" (click)="reproducirCancion(cancion)">
+              <div class="track-item">
                 <div class="track-number">{{ $index + 2 }}</div>
                 <div class="track-image">
                   <img [src]="cancion.album?.images?.[0]?.url || 'assets/default-album.svg'" [alt]="cancion.name">
                 </div>
-                <div class="track-details">
+                <div class="track-details" (click)="reproducirCancion(cancion)">
                   <h4>{{ cancion.name }} @if(cancion.preview_url) {<span class="preview-badge">🎵</span>}</h4>
                   <p>{{ obtenerNombresArtistas(cancion.artists) }}</p>
                 </div>
-                <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
+                <div class="track-actions">
+                  <!-- 🎵 NUEVO: Botón de descarga según especificaciones del profesor -->
+                  @if (puedeDescargar(cancion)) {
+                    <button class="download-btn" (click)="descargarCancion(cancion)" title="Descargar según especificaciones del profesor">
+                      <i class="fa-solid fa-download"></i>
+                    </button>
+                  }
+                  <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
+                </div>
               </div>
             }
           </div>
