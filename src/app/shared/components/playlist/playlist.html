@@ -1,1 +1,14 @@
-<p>playlist works!</p>
+<div class="playlist-container">
+    @if (playlist && playlist.length > 1) {
+    <ul class="playlist">
+        @for (song of playlist.slice(1); track song.id) {
+        <li (click)="onSongSelect(song)">
+            <span>{{ song.name }}</span>
+            <span>{{ song.artists }}</span>
+        </li>
+        }
+    </ul>
+    } @else {
+    <p>No hay canciones disponibles en este álbum.</p>
+    }
+</div>

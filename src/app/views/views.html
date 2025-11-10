@@ -13,7 +13,7 @@
             @if (currentSong()) {
             <app-song-info [song]="currentSong()" [cover]="currentCover()" displayMode="main"></app-song-info>
             } 
-            <app-playlist></app-playlist>
+             <app-playlist [playlist]="playlist()"></app-playlist>
         </aside>
     </section>
     
