@@ -1,92 +1,40 @@
-import { Component, ElementRef, ViewChild, signal, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { Track } from '../../../interfaces/track';
-import { PlayerStateService } from '../../../services/general/player-state.service';
+import { Component, ElementRef, ViewChild, Input, signal } from '@angular/core';
+import { Song } from 'src/app/interfaces/song';
 
 @Component({
   selector: 'app-audio-controller',
   standalone: false,
   templateUrl: './audio-controller.html',
-  styleUrl: './audio-controller.css'
+  styleUrls: ['./audio-controller.css']
 })
-export class AudioController implements OnChanges {
+export class AudioController {
   @ViewChild('audio') audioElement!: ElementRef<HTMLAudioElement>;
-  @Input() currentSong?: Track;
-  @Input() playlist: Track[] = [];
+  @Input() currentSong!: Song; 
+  @Input() playlist: Song[] = [];
 
   isPlaying = signal(false);
   currentTime = signal(0);
   duration = signal(0);
   progress = signal(0);
-  currentIndex = 0;
-
-  constructor(private playerState: PlayerStateService) {}
-
-  ngOnChanges(changes: SimpleChanges) {
-    // cuando cambia la canción actual
-    if (changes['currentSong'] && changes['currentSong'].currentValue) {
-      console.log('Nueva canción recibida:', changes['currentSong'].currentValue);
-      this.loadSong(changes['currentSong'].currentValue);
-    }
-  }
-
-  private async tryLoadAudio(url: string) {
-    const audio = this.audioElement.nativeElement;
-    
-    try {
-      // intentar cargar el audio
-      audio.src = url;
-      
-      // esperar a que se cargue la metadata
-      await new Promise((resolve, reject) => {
-        const loadHandler = () => {
-          console.log('Audio metadata cargada. Duración:', audio.duration);
-          resolve(true);
-        };
-        const errorHandler = (error: any) => {
-          console.error('Error al cargar el audio:', error);
-          reject(error);
-        };
-        
-        audio.addEventListener('loadedmetadata', loadHandler, { once: true });
-        audio.addEventListener('error', errorHandler, { once: true });
-      });
-
-      return true;
-    } catch (error) {
-      console.error('Error al cargar el audio:', error);
-      return false;
-    }
-  }
+  currentIndex = 0;  
 
   ngAfterViewInit() {
     const audio = this.audioElement.nativeElement;
     
-    if (this.currentSong?.preview_url) {
-      this.loadSong(this.currentSong);
+    if (this.currentSong?.url) {  // Verifica que haya canción para reproducir
+      audio.src = this.currentSong.url;
     }
     
-    // Actualiza el tiempo actual y el progreso mientras se reproduce
     audio.addEventListener('timeupdate', () => {
       this.currentTime.set(audio.currentTime);
       this.progress.set((audio.currentTime / audio.duration) * 100 || 0);
     });
 
-    // Cuando se carga la metadata del audio (incluyendo duración)
     audio.addEventListener('loadedmetadata', () => {
-      // Para previews de Spotify, la duración es típicamente 30 segundos
       this.duration.set(audio.duration);
-      // También actualizamos el valor máximo de la barra de progreso
-      const progressBar = document.getElementById('control-bar') as HTMLInputElement;
-      if (progressBar) {
-        progressBar.max = audio.duration.toString();
-      }
     });
 
-    // Cuando termina la canción
     audio.addEventListener('ended', () => {
-      this.isPlaying.set(false);
-      this.currentTime.set(0);
-      this.progress.set(0);
       this.playNext();
     });
   }
@@ -107,7 +55,7 @@ export class AudioController implements OnChanges {
     if (this.currentIndex > 0) {
       this.currentIndex--;
     } else {
-      this.currentIndex = this.playlist.length - 1;
+      this.currentIndex = this.playlist.length - 1;  // Volver a la última canción si estamos en la primera
     }
     this.loadSong(this.playlist[this.currentIndex]);
   }
@@ -116,36 +64,18 @@ export class AudioController implements OnChanges {
     if (this.currentIndex < this.playlist.length - 1) {
       this.currentIndex++;
     } else {
-      this.currentIndex = 0;
+      this.currentIndex = 0;  // Volver a la primera canción si estamos en la última
     }
     this.loadSong(this.playlist[this.currentIndex]);
   }
 
-  async loadSong(song: Track) {
-    if (!song?.preview_url) {
-      console.error('Esta canción no tiene vista previa disponible');
-      return;
-    }
-
-    console.log('Intentando cargar canción:', song.name);
+  loadSong(song: Song) {
+    const audio = this.audioElement.nativeElement;
+    this.currentSong = song;
+    audio.src = song.url; 
     
-    // Resetear estados
-    this.currentTime.set(0);
-    this.duration.set(0);
-    this.progress.set(0);
-    this.isPlaying.set(false);
-
-    // Intentar cargar el audio
-    const loaded = await this.tryLoadAudio(song.preview_url);
-    
-    if (loaded) {
-      console.log('Canción cargada exitosamente');
-      // Si estaba reproduciendo, continuar reproduciendo
-      if (this.isPlaying()) {
-        this.audioElement.nativeElement.play();
-      }
-    } else {
-      console.error('No se pudo cargar la canción');
+    if (this.isPlaying()) {
+      audio.play(); 
     }
   }
 
@@ -157,15 +87,9 @@ export class AudioController implements OnChanges {
   }
 
   formatTime(seconds: number): string {
-    if (isNaN(seconds) || seconds === 0) return '0:00';
-    
-    // Convertir a minutos y segundos
+    if (isNaN(seconds)) return '0:00';
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    
-    // Asegurar que los segundos siempre tengan dos dígitos
-    const formattedSecs = secs.toString().padStart(2, '0');
-    
-    return `${mins}:${formattedSecs}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 }

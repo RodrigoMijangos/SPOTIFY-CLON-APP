@@ -3,8 +3,8 @@
     <ul class="playlist">
         @for (song of playlist.slice(1); track song.id) {
         <li (click)="onSongSelect(song)">
+            <img [src]="cover?.url" alt="" class="song-img">
             <span>{{ song.name }}</span>
-            <span>{{ song.artists }}</span>
         </li>
         }
     </ul>

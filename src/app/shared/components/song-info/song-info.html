@@ -1,7 +1,14 @@
 <div class="song-wrapper">
-    <img [src]="cover()?.url ?? ''" alt="" class="card-song-img">
-    <div class="card-song-details">
-        <h1 class="card-song-title">{{song()?.name ?? 'Sin título'}}</h1>
-        <h3 class="card-song-artist">{{song()?.artists?.[0]?.name ?? 'Artista desconocido'}}</h3>
-    </div>
+    @if (song()) {
+        <img [src]="cover()?.url ?? ''" alt="" class="card-song-img">
+        <div class="card-song-details">
+            <h1 class="card-song-title">{{ song()?.name }}</h1>
+            <h3 class="card-song-artist">{{ song()?.artists?.[0]?.name }}</h3>
+        </div>
+    } @else {
+        <div class="card-song-details">
+            <h1 class="card-song-title">Sin título</h1>
+            <h3 class="card-song-artist">Artista desconocido</h3>
+        </div>
+    }
 </div>

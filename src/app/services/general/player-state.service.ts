@@ -56,4 +56,5 @@ export class PlayerStateService {
     }
     this.currentCoverSub.next(album.images?.[0]);
   }
+
 }

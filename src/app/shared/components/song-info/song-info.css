@@ -3,3 +3,11 @@
     flex-direction: column;
     width: inherit;
 }
+
+h1, h3{
+    color: white;
+}
+
+.card-song-details{
+    padding: 10px 0;
+}

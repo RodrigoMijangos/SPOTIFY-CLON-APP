@@ -12,13 +12,14 @@
         <aside class="aside">
             @if (currentSong()) {
             <app-song-info [song]="currentSong()" [cover]="currentCover()" displayMode="main"></app-song-info>
-            } 
-             <app-playlist [playlist]="playlist()"></app-playlist>
+            }
+            <app-playlist [playlist]="playlist()"></app-playlist>
         </aside>
     </section>
-    
-    <app-audio-controller 
-        [currentSong]="currentSong()" 
-        [playlist]="playlist()">
-    </app-audio-controller>
+
+<app-audio-controller 
+    [currentSong]="currentPlayableSong() ?? { name: '', artist: '', url: '', cover: '' }" 
+    [playlist]="playablePlaylist()"
+></app-audio-controller>
+
 </main>

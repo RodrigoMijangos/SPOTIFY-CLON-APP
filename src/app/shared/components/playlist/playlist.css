@@ -1,0 +1,24 @@
+.playlist-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 20px 15px;
+    border-radius: 20px;
+}
+
+.playlist {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+li {
+    text-decoration: none;
+    list-style: none;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+span{
+    font-size: 18px;
+    color: white;
+}
