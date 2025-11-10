@@ -1,1 +1,39 @@
-<p>home-child works!</p>
+@if (tracks().length > 0 || artists().length > 0 || albums().length > 0) {
+  
+  <div class="results-container">
+
+    @if (tracks().length > 0) {
+      <div class="results-section">
+        <h2>Canciones</h2>
+        @for (track of tracks(); track track.id) {
+          <div class="result-item">
+            <p>{{ track.name }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    @if (artists().length > 0) {
+      <div class="results-section">
+        <h2>Artistas</h2>
+        @for (artist of artists(); track artist.id) {
+          <div class="result-item">
+            <p>{{ artist.name }}</p>
+          </div>
+        }
+      </div>
+    }
+
+    @if (albums().length > 0) {
+      <div class="results-section">
+        <h2>Álbumes</h2>
+        @for (album of albums(); track album.id) {
+          <div class="result-item">
+            <p>{{ album.name }}</p>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+}

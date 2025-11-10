@@ -15,11 +15,11 @@ import { RouterLink } from '@angular/router';
     StaticContainer,
     StaticChild,
     FirstChild,
-    SecondChild,
-    HomeChild
+    SecondChild
   ],
   imports: [
     CommonModule,
+    HomeChild,
     AppRoutingModule,
     RouterLink
 ]

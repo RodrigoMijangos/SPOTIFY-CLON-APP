@@ -1,46 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap');
+/* src/styles.css (Añade esto al final) */
 
+/* Variables de color de Spotify (si no las tienes, agrégalas) */
 :root {
+  --spotify-black: #191414;
+  --spotify-gray-dark: #282828;
+  --spotify-gray-medium: #535353;
+  --spotify-gray-light: #b3b3b3;
   --spotify-green: #1DB954;
-  --spotify-light-green: #1ED760;
-  --spotify-black: #121212;
-  --spotify-gray-dark: #181818;
-  --spotify-gray-light: #282828;
   --spotify-text-primary: #FFFFFF;
-  --spotify-text-secondary: #B3B3B3;
+  --spotify-text-secondary: #b3b3b3;
 }
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Estilos generales para las tarjetas de resultados */
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Tarjetas de 180px en adelante */
+  gap: 20px;
+  padding: 20px;
 }
 
-html, body {
-  height: 100%;
-  width: 100%;
+.card {
+  background-color: var(--spotify-gray-dark);
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 100%; /* Para que todas las tarjetas de una fila tengan la misma altura */
 }
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(135deg, var(--spotify-gray-dark) 0%, var(--spotify-black) 60%);
-  background-attachment: fixed; 
+.card:hover {
+  background-color: #383838;
+}
 
+.card-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 4px; /* Las imágenes de álbum y canción son cuadradas */
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.card-image.artist {
+  border-radius: 50%; /* Las imágenes de artista son redondas */
+}
+
+.card-title {
+  font-size: 1.1em;
+  font-weight: 700;
   color: var(--spotify-text-primary);
-  overflow: hidden;
+  margin-top: 5px;
+  margin-bottom: 3px;
+  white-space: nowrap; /* Evita que el texto salte de línea */
+  overflow: hidden; /* Oculta lo que se desborde */
+  text-overflow: ellipsis; /* Pone puntos suspensivos */
+  width: 100%; /* Para que el ellipsis funcione */
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--spotify-gray-light);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--spotify-text-secondary);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--spotify-text-primary);
+.card-subtitle {
+  font-size: 0.9em;
+  color: var(--spotify-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }

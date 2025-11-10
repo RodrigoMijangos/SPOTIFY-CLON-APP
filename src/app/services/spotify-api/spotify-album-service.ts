@@ -23,7 +23,7 @@ export class SpotifyAlbumService {
       map(
         apiresponse => {
 
-          const mappedTracks: Track[] = apiresponse.tracks.items.map(
+          const mappedTracks: Track[] = (apiresponse.tracks?.items || []).map(
             track => ({
               id: track.id,
               name: track.name,

@@ -1,8 +1,93 @@
-@if (album$ | async; as album) {
+<!-- src/app/player/player.html -->
 
-<div id="main">
-    <app-song-info [song]="album?.tracks?.at(0)" [cover]="album?.images?.at(0)" displayMode="main"></app-song-info>
-    <app-playlist [playlist]="album.tracks" [cover]="album?.images?.at(0)"></app-playlist>
- </div>
-    <app-audio-controller></app-audio-controller>
+<!-- 1. BARRA DE BÚSQUEDA (Siempre visible) -->
+<div class="search-container">
+  <input 
+    type="text" 
+    placeholder="¿Qué quieres escuchar? (Ej. José José)" 
+    (keyup.enter)="buscar(searchInput.value)"
+    (keyup)="buscar(searchInput.value)" 
+    #searchInput
+  >
+</div>
+
+<!-- 2. CONTENIDO (Cambia dinámicamente) -->
+
+<!-- Si NO estamos buscando, muestra el álbum (Pitbull) -->
+@if (!isSearching()) {
+  @if (album$ | async; as album) {
+    <div id="main">
+        <app-song-info [song]="album?.tracks?.at(0)" [cover]="album?.images?.at(0)" displayMode="main"></app-song-info>
+        <app-playlist [playlist]="album.tracks" [cover]="album?.images?.at(0)"></app-playlist>
+    </div>
+  }
+}
+
+<!-- Si SÍ estamos buscando, muestra los resultados -->
+@if (isSearching()) {
+  <!-- search-results-wrapper permite el scroll independiente -->
+  <div class="search-results-wrapper">
+
+    <!-- === SECCIÓN DE CANCIONES === -->
+    @if (tracks().length > 0) {
+      <div class="results-section">
+        <h2>Canciones</h2>
+        <!-- card-list es el grid que definimos en styles.css -->
+        <div class="card-list">
+          @for (track of tracks(); track track.id) {
+            <!-- 
+              ¡ESTA ES LA TARJETA!
+              Llama a playTrack() al hacer clic.
+            -->
+            <div class="card" (click)="playTrack(track)">
+              <img [src]="track.album.images.at(0)?.url" alt="{{ track.name }}" class="card-image">
+              <div class="card-title">{{ track.name }}</div>
+              <div class="card-subtitle">{{ track.artists.at(0)?.name }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- === SECCIÓN DE ARTISTAS === -->
+    @if (artists().length > 0) {
+      <div class="results-section">
+        <h2>Artistas</h2>
+        <div class="card-list">
+          @for (artist of artists(); track artist.id) {
+            <!-- Llama a goToArtist() al hacer clic -->
+            <div class="card" (click)="goToArtist(artist.id)">
+              <img [src]="artist.images.at(0)?.url" alt="{{ artist.name }}" class="card-image artist">
+              <div class="card-title">{{ artist.name }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- === SECCIÓN DE ÁLBUMES === -->
+    @if (albums().length > 0) {
+      <div class="results-section">
+        <h2>Álbumes</h2>
+        <div class="card-list">
+          @for (album of albums(); track album.id) {
+            <!-- Llama a goToAlbum() al hacer clic -->
+            <div class="card" (click)="goToAlbum(album.id)">
+              <img [src]="album.images.at(0)?.url" alt="{{ album.name }}" class="card-image">
+              <div class="card-title">{{ album.name }}</div>
+              <div class="card-subtitle">{{ album.artists.at(0)?.name }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Mensaje si no hay NADA -->
+    @if (tracks().length === 0 && artists().length === 0 && albums().length === 0) {
+      <div class="no-results">
+        <p>No se encontraron resultados para "{{ searchInput.value }}".</p>
+      </div>
+    }
+
+  </div>
 }
