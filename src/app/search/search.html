@@ -30,54 +30,72 @@
   @if (showResults && !isSearching) {
     <div class="search-results">
       
-      <!-- Reproductor principal -->
-      @if (searchResults.tracks?.length > 0) {
-        <div class="main-player">
-          <div class="player-background" [style.background-image]="'url(' + (searchResults.tracks[0].album?.images?.[0]?.url || 'assets/default-album.svg') + ')'">
-            <div class="player-overlay">
-              <div class="album-art">
-                <img [src]="searchResults.tracks[0].album?.images?.[0]?.url || 'assets/default-album.svg'" [alt]="searchResults.tracks[0].name">
-              </div>
-              
-              <div class="track-info">
-                <h1>{{ searchResults.tracks[0].name }}</h1>
-                <p>{{ obtenerNombresArtistas(searchResults.tracks[0].artists) }}</p>
-              </div>
-              
-              <div class="player-controls">
+      <!-- Pestañas de navegación -->
+      <div class="tabs-container">
+        <button 
+          class="tab-btn"
+          [class.active]="activeTab === 'tracks'"
+          (click)="setActiveTab('tracks')">
+          Canciones
+        </button>
+        <button 
+          class="tab-btn"
+          [class.active]="activeTab === 'albums'"
+          (click)="setActiveTab('albums')">
+          Álbumes
+        </button>
+        <button 
+          class="tab-btn"
+          [class.active]="activeTab === 'artists'"
+          (click)="setActiveTab('artists')">
+          Artistas
+        </button>
+      </div>
+
+      <!-- Contenido de Canciones -->
+      @if (activeTab === 'tracks' && searchResults.tracks?.length > 0) {
+        <div class="tracks-section">
+          <!-- Canción destacada -->
+          <div class="main-player">
+            <div class="player-background" [style.background-image]="'url(' + (searchResults.tracks[0].album?.images?.[0]?.url || '') + ')'">
+              <div class="player-overlay">
+                <div class="album-art">
+                  <img [src]="searchResults.tracks[0].album?.images?.[0]?.url || ''" [alt]="searchResults.tracks[0].name">
+                </div>
+                
+                <div class="track-info">
+                  <h1>{{ searchResults.tracks[0].name }}</h1>
+                  <p>{{ obtenerNombresArtistas(searchResults.tracks[0].artists) }}</p>
+                </div>
+                
+                <div class="player-controls">
                 <button class="control-btn" (click)="cancionAnterior()">
                   <i class="fa-solid fa-backward-step"></i>
-                  <span>last</span>
                 </button>
                 
                 <button class="play-btn" (click)="reproducirCancion(searchResults.tracks[0])">
                   <i class="fa-solid fa-play"></i>
-                  <span>Play</span>
                 </button>
                 
                 <button class="control-btn" (click)="siguienteCancion()">
                   <i class="fa-solid fa-forward-step"></i>
-                  <span>forward</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
-      }
 
-      <!-- Lista de canciones -->
-      @if (searchResults.tracks?.length > 1) {
-        <div class="tracks-section">
-          <h2>Más canciones</h2>
+          <!-- Lista de todas las canciones -->
+          <h2>Canciones</h2>
           <div class="tracks-list">
-            @for (cancion of searchResults.tracks.slice(1); track cancion.id) {
+            @for (cancion of searchResults.tracks; track cancion.id) {
               <div class="track-item">
-                <div class="track-number">{{ $index + 2 }}</div>
+                <div class="track-number">{{ $index + 1 }}</div>
                 <div class="track-image">
-                  <img [src]="cancion.album?.images?.[0]?.url || 'assets/default-album.svg'" [alt]="cancion.name">
+                  <img [src]="cancion.album?.images?.[2]?.url || ''" [alt]="cancion.name">
                 </div>
                 <div class="track-details" (click)="reproducirCancion(cancion)">
-                  <h4>{{ cancion.name }} @if(cancion.preview_url) {<span class="preview-badge">🎵</span>}</h4>
+                  <h4>{{ cancion.name }} @if(cancion.preview_url) {<span class="preview-badge">♫</span>}</h4>
                   <p>{{ obtenerNombresArtistas(cancion.artists) }}</p>
                 </div>
                 <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
@@ -86,13 +104,56 @@
           </div>
         </div>
       }
+
+      <!-- Contenido de Álbumes -->
+      @if (activeTab === 'albums' && searchResults.albums?.length > 0) {
+        <div class="albums-section">
+          <h2>Álbumes</h2>
+          <div class="albums-grid">
+            @for (album of searchResults.albums; track album.id) {
+              <div class="album-card">
+                <div class="album-image">
+                  <img [src]="album.images?.[0]?.url || ''" [alt]="album.name">
+                </div>
+                <div class="album-info">
+                  <h3>{{ album.name }}</h3>
+                  <p>{{ obtenerNombresArtistas(album.artists) }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Contenido de Artistas -->
+      @if (activeTab === 'artists' && searchResults.artists?.length > 0) {
+        <div class="artists-section">
+          <h2>Artistas</h2>
+          <div class="artists-grid">
+            @for (artist of searchResults.artists; track artist.id) {
+              <div class="artist-card">
+                <div class="artist-image">
+                  <img [src]="artist.images?.[0]?.url || ''" [alt]="artist.name">
+                </div>
+                <div class="artist-info">
+                  <h3>{{ artist.name }}</h3>
+                  <p>Artista</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
       
-      @if (searchResults.tracks?.length === 0 && showResults) {
+      <!-- Sin resultados -->
+      @if (showResults && ((activeTab === 'tracks' && (!searchResults.tracks || searchResults.tracks.length === 0)) || 
+           (activeTab === 'albums' && (!searchResults.albums || searchResults.albums.length === 0)) || 
+           (activeTab === 'artists' && (!searchResults.artists || searchResults.artists.length === 0)))) {
         <div class="no-results-message">
           <div class="message-content">
             <i class="fa fa-search" style="font-size: 48px; color: #666; margin-bottom: 16px;"></i>
-            <h3>No se encontraron resultados</h3>
-            <p>Revisa la consola del navegador (F12) para ver los detalles</p>
+            <h3>No hay resultados</h3>
+            <p>Intenta con otro término de búsqueda</p>
           </div>
         </div>
       }
@@ -112,23 +173,20 @@
             
             <div class="default-info">
               <h1>Tu música, tu mundo</h1>
-              <p>Descubre millones de canciones</p>
+              <p>Encuentra millones de canciones</p>
             </div>
             
             <div class="default-controls">
               <button class="control-btn" disabled>
                 <i class="fa-solid fa-backward-step"></i>
-                <span>last</span>
               </button>
               
               <button class="play-btn" disabled>
                 <i class="fa-solid fa-play"></i>
-                <span>Play</span>
               </button>
               
               <button class="control-btn" disabled>
                 <i class="fa-solid fa-forward-step"></i>
-                <span>forward</span>
               </button>
             </div>
           </div>

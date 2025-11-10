@@ -8,13 +8,13 @@ import { AudioController } from './audio-controller/audio-controller';
 import { Playlist } from './playlist/playlist';
 import { Player } from './player/player';
 import { SearchComponent } from './search/search';
+import { MusicBarComponent } from './music-bar/music-bar.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { authInterceptor } from './interceptors/auth-interceptor';
-import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
-  declarations: [App, SongInfo, AudioController, Playlist, Player, SearchComponent],
+  declarations: [App, SongInfo, AudioController, Playlist, Player, SearchComponent, MusicBarComponent],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [
     provideBrowserGlobalErrorListeners(), provideZonelessChangeDetection(),

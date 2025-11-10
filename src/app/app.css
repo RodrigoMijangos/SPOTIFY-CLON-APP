@@ -19,6 +19,7 @@
   background: linear-gradient(180deg, #1e3264 0%, #121212 100%);
   overflow-y: auto;
   position: relative;
+  padding-bottom: 90px; /* Espacio para la barra de música */
 }
 
 /* Barra de navegación superior */

@@ -1,15 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
-import { SpotifySearchService } from '../services/spotify-api/spotify-search-service';
-import { AudioPlayerService } from '../services/audio/audio-player.service';
-import { Track } from '../interfaces/track';
+import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
+import { SpotifyApiService } from '../core/services/spotify-api.service';
+import { AudioService } from '../core/services/audio.service';
+import { Track } from '../core/models/track.model';
 
 @Component({
   selector: 'app-search',
   standalone: false,
   templateUrl: './search.html',
   styles: [`
-    .search-container { background: #121212; color: white; min-height: 100vh; padding-bottom: 120px; padding-top: 80px; }
+    .search-container { background: #121212; color: white; min-height: 100vh; padding-bottom: 120px; padding-top: 20px; }
+    
     .search-header { margin-bottom: 32px; padding: 0 24px; }
     .search-bar { position: relative; max-width: 400px; margin: 0 auto; }
     .search-input { width: 100%; background: rgba(255,255,255,0.1); border: none; border-radius: 25px; padding: 12px 20px; color: white; outline: none; font-size: 16px; }
@@ -32,15 +33,22 @@ import { Track } from '../interfaces/track';
     
     .tracks-section h2 { font-size: 24px; margin-bottom: 16px; }
     .tracks-list { display: flex; flex-direction: column; gap: 8px; }
-    .track-item { display: flex; align-items: center; padding: 12px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+    .track-item { display: flex; align-items: center; padding: 12px; border-radius: 4px; transition: background 0.2s; }
     .track-item:hover { background: #1a1a1a; }
     .track-number { width: 30px; text-align: center; color: #b3b3b3; }
     .track-image { width: 40px; height: 40px; margin: 0 12px; border-radius: 4px; overflow: hidden; }
     .track-image img { width: 100%; height: 100%; object-fit: cover; }
-    .track-details { flex: 1; min-width: 0; }
+    .track-details { flex: 1; min-width: 0; cursor: pointer; }
     .track-details h4 { margin: 0; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .track-details p { margin: 0; color: #b3b3b3; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .track-duration { color: #b3b3b3; font-size: 14px; }
+    .track-duration { color: #b3b3b3; font-size: 14px; margin-right: 12px; }
+    
+    .download-btn { background: #1db954; }
+    .download-btn:hover { background: #1ed760; }
+    .track-actions { display: flex; align-items: center; gap: 8px; }
+    .download-track-btn { background: #1db954; border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
+    .download-track-btn:hover { background: #1ed760; }
+    .preview-badge { background: #1db954; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-left: 8px; }
 
     /* Vista por defecto mejorada */
     .default-view { padding: 20px; }
@@ -67,6 +75,24 @@ import { Track } from '../interfaces/track';
     /* Estilos simplificados - solo Angular */
     .track-details { cursor: pointer; flex: 1; }
     .track-duration { color: #b3b3b3; font-size: 14px; }
+
+    /* Estilos para álbumes */
+    .albums-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+    .album-card { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.3s ease; }
+    .album-card:hover { background: rgba(255,255,255,0.15); transform: translateY(-5px); }
+    .album-image { width: 100%; aspect-ratio: 1; border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+    .album-image img { width: 100%; height: 100%; object-fit: cover; }
+    .album-info h3 { color: white; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .album-info p { color: #b3b3b3; font-size: 14px; }
+
+    /* Estilos para artistas */
+    .artists-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; }
+    .artist-card { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+    .artist-card:hover { background: rgba(255,255,255,0.15); transform: translateY(-5px); }
+    .artist-image { width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px; }
+    .artist-image img { width: 100%; height: 100%; object-fit: cover; }
+    .artist-info h3 { color: white; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .artist-info p { color: #b3b3b3; font-size: 14px; }
   `]
 })
 export class SearchComponent implements OnInit, OnDestroy {
@@ -75,27 +101,52 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchResults: any = {
     tracks: [],
     albums: [],
-    artists: [],
-    playlists: []
+    artists: []
   };
   isSearching = false;
   showResults = false;
+  activeTab: 'tracks' | 'albums' | 'artists' = 'tracks';
   
   private searchSubject = new Subject<string>();
   private searchSubscription!: Subscription;
 
   constructor(
-    private _searchService: SpotifySearchService,
-    private _audioPlayer: AudioPlayerService
+    private spotify: SpotifyApiService,
+    private audio: AudioService
   ) {}
 
   ngOnInit(): void {
     this.searchSubscription = this.searchSubject.pipe(
-      debounceTime(300), distinctUntilChanged(),
-      switchMap(consulta => consulta.trim().length > 2 ? (this.isSearching = true, this._searchService.buscar(consulta)) : (this.isSearching = this.showResults = false, []))
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(query => {
+        if (query && query.trim().length > 1) {
+          this.isSearching = true;
+          console.log('Buscando:', query);
+          return this.spotify.searchAll(query.trim());
+        } else {
+          this.isSearching = false;
+          this.showResults = false;
+          return of({ tracks: [], albums: [], artists: [] });
+        }
+      })
     ).subscribe({
-      next: (resultados: any) => (this.searchResults = resultados, this.isSearching = false, this.showResults = true),
-      error: () => (this.isSearching = this.showResults = false)
+      next: (results) => {
+        console.log('Resultados:', results);
+        this.searchResults = results;
+        if (results.tracks?.length > 0 || results.albums?.length > 0 || results.artists?.length > 0) {
+          this.audio.setPlaylist(results.tracks);
+          this.showResults = true;
+        } else {
+          this.showResults = false;
+        }
+        this.isSearching = false;
+      },
+      error: (error) => {
+        console.error('Error en búsqueda:', error);
+        this.isSearching = false;
+        this.showResults = false;
+      }
     });
   }
 
@@ -103,18 +154,51 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.searchSubscription?.unsubscribe();
   }
 
-  onSearchInput(event: any): void { this.searchQuery = event.target.value; this.searchSubject.next(this.searchQuery); }
-  clearSearch(): void { this.searchQuery = ''; this.showResults = false; this.searchResults = { tracks: [], albums: [], artists: [], playlists: [] }; }
-
-  reproducirCancion(cancion: any): void {
-    if (this.searchResults.tracks?.length > 0) this._audioPlayer.setPlaylist(this.searchResults.tracks);
-    this._audioPlayer.playTrack(cancion);
+  onSearchInput(event: any): void { 
+    this.searchQuery = event.target.value; 
+    this.searchSubject.next(this.searchQuery); 
+  }
+  
+  clearSearch(): void { 
+    this.searchQuery = ''; 
+    this.showResults = false; 
+    this.searchResults = { tracks: [], albums: [], artists: [] }; 
   }
 
-  cancionAnterior(): void { this._audioPlayer.previous(); }
-  siguienteCancion(): void { this._audioPlayer.next(); }
+  reproducirCancion(cancion: any): void {
+    console.log('Reproduciendo:', cancion.name);
+    this.audio.playTrack(cancion);
+  }
+
+  togglePlayPause(): void {
+    this.audio.togglePlayPause();
+  }
+
+  cancionAnterior(): void { 
+    console.log('Canción anterior');
+    this.audio.previous(); 
+  }
   
-  // Funcionalidad de descarga removida - solo Angular puro
+  siguienteCancion(): void { 
+    console.log('Siguiente canción');
+    this.audio.next(); 
+  }
+
+  setActiveTab(tab: 'tracks' | 'albums' | 'artists'): void {
+    this.activeTab = tab;
+  }
+
+  get currentTrack(): Track | null {
+    return this.audio.getCurrentTrackInfo();
+  }
+
+  get isPlaying(): boolean {
+    return this.audio.isPlaying$.value;
+  }
+
+  get playlistInfo(): { current: number; total: number } {
+    return this.audio.getPlaylistInfo();
+  }
 
   formatearDuracion(duracion: number): string {
     if (!duracion) return '0:00';

@@ -41,37 +41,14 @@ export class AudioPlayerService {
 
   private loadAndPlay(track: Track): void {
     this.currentTrackSubject.next(track);
-    console.log('🎵 Reproduciendo:', track.name, 'por', track.artists?.[0]?.name);
+    this.pause();
     
     if (track.preview_url) {
-      console.log('🔄 Intentando preview de Spotify:', track.preview_url);
-      
-      // Crear nuevo audio element para evitar problemas
-      this.audio = new Audio();
-      this.setupAudioEvents();
-      
       this.audio.src = track.preview_url;
       this.audio.crossOrigin = 'anonymous';
-      this.audio.volume = this.volumeSubject.value;
-      
-      // Intentar cargar y reproducir
-      const playPromise = this.audio.play();
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log('✅ Reproduciendo audio real de Spotify!');
-            this.isPlayingSubject.next(true);
-          })
-          .catch((error) => {
-            console.log('❌ Preview no disponible:', error.message);
-            this.generarAudioMusical(track);
-          });
-      } else {
-        this.generarAudioMusical(track);
-      }
+      this.audio.load();
+      this.audio.play().catch(() => this.generarAudioMusical(track));
     } else {
-      console.log('ℹ️ Esta canción no tiene preview - generando audio musical');
       this.generarAudioMusical(track);
     }
   }
