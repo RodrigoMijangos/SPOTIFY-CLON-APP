@@ -13,14 +13,13 @@ import { PlayerStateService } from '../../services/general/player-state.service'
 export class SearchResults implements OnInit {
 
   searchResults = signal<Album[]>([]);
-  isLoading = signal(false);
   searchQuery = signal('');
 
   constructor(
     private route: ActivatedRoute,
     private searchService: SpotifySearchService,
     private playerState: PlayerStateService
-  ) {}
+  ) { }
 
   searchError = signal<string | null>(null);
 
@@ -35,27 +34,35 @@ export class SearchResults implements OnInit {
   }
 
   private performSearch(query: string) {
-    this.isLoading.set(true);
     this.searchError.set(null);
-    
-    console.log('🎵 Iniciando búsqueda en SearchResults para:', query);
-    
+
+    console.log('Iniciando búsqueda en SearchResults para:', query);
+
     this.searchService.search(query).subscribe({
       next: (results) => {
-        console.log('📝 Resultados recibidos:', results.length);
+        console.log('Resultados recibidos:', results.length);
         this.searchResults.set(results);
-        this.isLoading.set(false);
+        const validResults = results.filter(album => album.id && album.id.length > 0);
+        console.log('Resultados válidos:', validResults.length);
+        this.searchResults.set(validResults);
       },
       error: (error: Error) => {
-        console.error('❌ Error en SearchResults:', error);
+        console.error('Error en SearchResults:', error);
         this.searchError.set(error.message);
         this.searchResults.set([]);
-        this.isLoading.set(false);
       }
     });
   }
 
   onAlbumClick(album: Album) {
+    if (!album.id) {
+      console.error('Álbum sin ID:', album);
+      this.searchError.set('Este álbum no tiene un ID válido');
+      return;
+    }
+
+    console.log('Álbum seleccionado:', album.name, 'ID:', album.id);
     this.playerState.selectAlbum(album);
+
   }
 }

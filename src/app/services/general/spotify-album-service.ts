@@ -19,6 +19,7 @@ export class SpotifyAlbumService {
   ) {}
 
   getAlbum(id: string): Observable<Album> {
+    console.log('Cargango album:', id)
     return this._http.get<SpotifyAlbumResponse>(
       `${environment.API_URL}/albums/${id}`
     ).pipe(
@@ -41,7 +42,7 @@ export class SpotifyAlbumService {
         const mappedImages: Image[] = apiresponse.images.map(
           image => ({
             width: image.width,
-            heigth: image.heigth,
+            height: image.height,
             url: image.url
           })
         );

@@ -1,7 +1,8 @@
 <nav class="nav">
     <div class="search-wrapper">
-        <input class="search-input" type="text" name="" placeholder="Search">
-        <button class="search-button" routerLink="/search-results">
+        <input class="search-input" type="text" name="" placeholder="Search" [value]="searchQuery()"
+            (input)="onInputChange($event)" (keyup.enter)="onSearch($event)">
+        <button class="search-button" routerLink="/search-results" (click)="onSearch($event)">
             <i class="fa fa-search"></i>
         </button>
     </div>
