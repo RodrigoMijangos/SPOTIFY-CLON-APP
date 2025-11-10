@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { SpotifySearchService } from '../services/spotify-api/spotify-search-service';
 import { AudioPlayerService } from '../services/audio/audio-player.service';
-import { DownloadService } from '../services/download/download.service';
 import { Track } from '../interfaces/track';
 
 @Component({
@@ -65,11 +64,7 @@ import { Track } from '../interfaces/track';
     .message-content h3 { color: white; margin-bottom: 16px; font-size: 24px; }
     .message-content p { color: #b3b3b3; margin-bottom: 16px; }
     
-    /* 🎵 NUEVOS ESTILOS: Botón de descarga para especificaciones del profesor */
-    .track-actions { display: flex; align-items: center; gap: 12px; }
-    .download-btn { background: #1db954; border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 14px; }
-    .download-btn:hover { background: #1ed760; transform: scale(1.1); box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3); }
-    .download-btn:active { transform: scale(0.95); }
+    /* Estilos simplificados - solo Angular */
     .track-details { cursor: pointer; flex: 1; }
     .track-duration { color: #b3b3b3; font-size: 14px; }
   `]
@@ -91,8 +86,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private _searchService: SpotifySearchService,
-    private _audioPlayer: AudioPlayerService,
-    private _downloadService: DownloadService
+    private _audioPlayer: AudioPlayerService
   ) {}
 
   ngOnInit(): void {
@@ -120,26 +114,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   cancionAnterior(): void { this._audioPlayer.previous(); }
   siguienteCancion(): void { this._audioPlayer.next(); }
   
-  descargarCancion(cancion: any): void {
-    if (!this._downloadService.puedeDescargar(cancion)) {
-      alert('No se puede descargar esta canción');
-      return;
-    }
-    
-    this._downloadService.descargarCancion(cancion).subscribe({
-      next: (resultado) => {
-        alert(`Descarga completada!\n\nCancion: ${resultado.cancion}\nArtista: ${resultado.artista}\nArchivos: ${resultado.archivos.length}\n\nIncluye:\n- Cover: 3000x3000px PNG\n- Audio: AAC 64k HE, 128k LC, 256k LC`);
-      },
-      error: (error) => {
-        console.error('Error en descarga:', error);
-        alert('Error al descargar la canción');
-      }
-    });
-  }
-  
-  puedeDescargar(cancion: any): boolean {
-    return this._downloadService.puedeDescargar(cancion);
-  }
+  // Funcionalidad de descarga removida - solo Angular puro
 
   formatearDuracion(duracion: number): string {
     if (!duracion) return '0:00';

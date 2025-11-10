@@ -80,15 +80,7 @@
                   <h4>{{ cancion.name }} @if(cancion.preview_url) {<span class="preview-badge">🎵</span>}</h4>
                   <p>{{ obtenerNombresArtistas(cancion.artists) }}</p>
                 </div>
-                <div class="track-actions">
-                  <!-- 🎵 NUEVO: Botón de descarga según especificaciones del profesor -->
-                  @if (puedeDescargar(cancion)) {
-                    <button class="download-btn" (click)="descargarCancion(cancion)" title="Descargar según especificaciones del profesor">
-                      <i class="fa-solid fa-download"></i>
-                    </button>
-                  }
-                  <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
-                </div>
+                <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
               </div>
             }
           </div>

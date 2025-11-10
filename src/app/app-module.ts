@@ -18,7 +18,7 @@ import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-in
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [
     provideBrowserGlobalErrorListeners(), provideZonelessChangeDetection(),
-    provideHttpClient(withInterceptors([authInterceptor, addAuthHeaderInterceptor])), CookieService
+    provideHttpClient(withInterceptors([authInterceptor])), CookieService
   ],
   bootstrap: [App]
 })
