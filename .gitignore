@@ -18,6 +18,11 @@ yarn-error.log
 .c9/
 *.launch
 .settings/
+
+# FFmpeg y archivos pesados
+ffmpeg*
+*.zip
+*.exe
 *.sublime-workspace
 
 # Visual Studio Code
