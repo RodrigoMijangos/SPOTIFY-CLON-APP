@@ -72,7 +72,9 @@ import { Track } from '../core/models/track.model';
     .message-content h3 { color: white; margin-bottom: 16px; font-size: 24px; }
     .message-content p { color: #b3b3b3; margin-bottom: 16px; }
     
-    /* Estilos simplificados - solo Angular */
+    .demo-notice { background: rgba(29, 185, 84, 0.15); border: 1px solid rgba(29, 185, 84, 0.5); border-radius: 8px; padding: 16px; margin-top: 20px; }
+    .demo-notice p { color: #1ed760; margin: 0; font-size: 14px; font-weight: 500; }
+    
     .track-details { cursor: pointer; flex: 1; }
     .track-duration { color: #b3b3b3; font-size: 14px; }
 
@@ -132,7 +134,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       })
     ).subscribe({
       next: (results) => {
-        console.log('Resultados:', results);
         this.searchResults = results;
         if (results.tracks?.length > 0 || results.albums?.length > 0 || results.artists?.length > 0) {
           this.audio.setPlaylist(results.tracks);
@@ -142,8 +143,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         }
         this.isSearching = false;
       },
-      error: (error) => {
-        console.error('Error en búsqueda:', error);
+      error: () => {
         this.isSearching = false;
         this.showResults = false;
       }
@@ -166,7 +166,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   reproducirCancion(cancion: any): void {
-    console.log('Reproduciendo:', cancion.name);
     this.audio.playTrack(cancion);
   }
 
@@ -175,12 +174,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   cancionAnterior(): void { 
-    console.log('Canción anterior');
     this.audio.previous(); 
   }
   
   siguienteCancion(): void { 
-    console.log('Siguiente canción');
     this.audio.next(); 
   }
 

@@ -43,7 +43,7 @@ export class SpotifyApiService {
     return this.getAccessToken().pipe(
       switchMap(token => {
         if (!token) {
-          return of({ tracks: [], albums: [], artists: [] });
+          return this.getMockResults(query);
         }
 
         const headers = new HttpHeaders({
@@ -73,15 +73,91 @@ export class SpotifyApiService {
               artists: artists
             };
           }),
-          catchError(error => {
-            console.error('Error en búsqueda:', error);
-            if (error.status === 401) {
-              this.accessToken = null;
-            }
-            return of({ tracks: [], albums: [], artists: [] });
+          catchError(() => {
+            this.accessToken = null;
+            return this.getMockResults(query);
           })
         );
       })
     );
+  }
+
+  private getMockResults(query: string): Observable<SearchResult> {
+    const mockTracks: Track[] = [
+      {
+        id: '1',
+        name: `${query} - Canción Demo 1`,
+        duration_ms: 210000,
+        popularity: 85,
+        artists: [{ id: '1', name: 'Artista Demo' }],
+        album: {
+          id: '1',
+          name: 'Álbum Demo',
+          images: [
+            { url: 'https://via.placeholder.com/640x640/1db954/ffffff?text=Demo+1', height: 640, width: 640 },
+            { url: 'https://via.placeholder.com/300x300/1db954/ffffff?text=Demo+1', height: 300, width: 300 },
+            { url: 'https://via.placeholder.com/64x64/1db954/ffffff?text=D1', height: 64, width: 64 }
+          ]
+        },
+        external_urls: { spotify: '#' }
+      },
+      {
+        id: '2',
+        name: `${query} - Canción Demo 2`,
+        duration_ms: 195000,
+        popularity: 78,
+        artists: [{ id: '2', name: 'Otro Artista' }],
+        album: {
+          id: '2',
+          name: 'Segundo Álbum',
+          images: [
+            { url: 'https://via.placeholder.com/640x640/ff6b35/ffffff?text=Demo+2', height: 640, width: 640 },
+            { url: 'https://via.placeholder.com/300x300/ff6b35/ffffff?text=Demo+2', height: 300, width: 300 },
+            { url: 'https://via.placeholder.com/64x64/ff6b35/ffffff?text=D2', height: 64, width: 64 }
+          ]
+        },
+        external_urls: { spotify: '#' }
+      },
+      {
+        id: '3',
+        name: `Resultado para: ${query}`,
+        duration_ms: 180000,
+        popularity: 92,
+        artists: [{ id: '3', name: 'Artista Popular' }],
+        album: {
+          id: '3',
+          name: 'Hit Album',
+          images: [
+            { url: 'https://via.placeholder.com/640x640/9c27b0/ffffff?text=Demo+3', height: 640, width: 640 },
+            { url: 'https://via.placeholder.com/300x300/9c27b0/ffffff?text=Demo+3', height: 300, width: 300 },
+            { url: 'https://via.placeholder.com/64x64/9c27b0/ffffff?text=D3', height: 64, width: 64 }
+          ]
+        },
+        external_urls: { spotify: '#' }
+      }
+    ];
+
+    const mockAlbums = [
+      {
+        id: '1',
+        name: `Álbum ${query}`,
+        artists: [{ id: '1', name: 'Artista Demo' }],
+        images: [{ url: 'https://via.placeholder.com/640x640/1db954/ffffff?text=Album', height: 640, width: 640 }]
+      }
+    ];
+
+    const mockArtists = [
+      {
+        id: '1',
+        name: `Artista ${query}`,
+        images: [{ url: 'https://via.placeholder.com/640x640/333/ffffff?text=Artist', height: 640, width: 640 }]
+      }
+    ];
+
+    return of({
+      tracks: mockTracks,
+      albums: mockAlbums,
+      artists: mockArtists
+    });
   }
 }

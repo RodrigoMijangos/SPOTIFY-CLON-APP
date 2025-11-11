@@ -270,7 +270,6 @@ export class MusicBarComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.audioService.currentTrack$.subscribe(track => {
         this.currentTrack = track;
-        console.log('🎵 Barra de música - Nueva canción:', track?.name);
       }),
       
       this.audioService.isPlaying$.subscribe(playing => {

@@ -17,19 +17,14 @@ export class App implements OnInit{
   ){}
 
   ngOnInit(): void {
-    // Limpiar token viejo siempre
     this._cookieStorage.deleteKeyValue('access_token');
-    console.log('🧹 Token anterior limpiado');
-    
-    // Obtener nuevo token con TUS credenciales reales
     this._spotifyLogin.getAccessToken().subscribe({
-      next: (response) => {
-        console.log('✅ Token obtenido con tus credenciales:', response);
-        console.log('🎵 Ahora puedes buscar música!');
-      },
-      error: (error) => {
-        console.error('❌ Error obteniendo token:', error);
-        console.log('🔍 Verifica que las credenciales estén correctas en environment.development.ts');
+      next: (response) => console.log('Token obtenido correctamente'),
+      error: () => {
+        console.log('Usando datos demo. Para usar Spotify real:');
+        console.log('1. Ve a https://developer.spotify.com/dashboard');
+        console.log('2. Crea una aplicación');
+        console.log('3. Copia Client ID y Client Secret al archivo environment.development.ts');
       }
     });
   }

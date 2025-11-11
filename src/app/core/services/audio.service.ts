@@ -58,51 +58,40 @@ export class AudioService {
       this.audio.preload = 'auto';
       
       this.audio.play()
-        .then(() => {
-          console.log('Música iniciada');
-          this.isPlaying$.next(true);
-        })
-        .catch((error) => {
-          console.warn('No se pudo reproducir el audio:', error);
+        .then(() => this.isPlaying$.next(true))
+        .catch(() => {
           try {
             this.audio.src = track.preview_url!;
             this.audio.play();
-          } catch (fallbackError) {
-            console.warn('Reproduciendo tono de prueba');
+          } catch {
             this.generateTone();
           }
         });
     } else {
-      console.warn('Esta canción no tiene audio disponible');
       this.generateTone();
     }
   }
 
   private generateTone(): void {
     try {
-      console.log('Reproduciendo sonido de prueba');
       const context = new AudioContext();
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       
       oscillator.type = 'sine';
       oscillator.frequency.value = 440;
-      gain.gain.value = 0.1;
-      
       gain.gain.setValueAtTime(0, context.currentTime);
       gain.gain.linearRampToValueAtTime(0.1, context.currentTime + 0.1);
       gain.gain.linearRampToValueAtTime(0, context.currentTime + 1.5);
       
       oscillator.connect(gain);
       gain.connect(context.destination);
-      
       oscillator.start();
       oscillator.stop(context.currentTime + 1.5);
       
       this.isPlaying$.next(true);
       setTimeout(() => this.isPlaying$.next(false), 1500);
-    } catch (error) {
-      console.error('Error:', error);
+    } catch {
       this.isPlaying$.next(false);
     }
   }
@@ -140,25 +129,21 @@ export class AudioService {
   }
 
   next(): void {
-    console.log('Siguiente canción');
     if (this.currentIndex < this.playlist.length - 1) {
       this.currentIndex++;
-      this.playTrack(this.playlist[this.currentIndex]);
     } else {
       this.currentIndex = 0;
-      this.playTrack(this.playlist[this.currentIndex]);
     }
+    this.playTrack(this.playlist[this.currentIndex]);
   }
 
   previous(): void {
-    console.log('Canción anterior');
     if (this.currentIndex > 0) {
       this.currentIndex--;
-      this.playTrack(this.playlist[this.currentIndex]);
     } else {
       this.currentIndex = this.playlist.length - 1;
-      this.playTrack(this.playlist[this.currentIndex]);
     }
+    this.playTrack(this.playlist[this.currentIndex]);
   }
 
   getCurrentTrackInfo(): Track | null {

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 
 export interface SpotifySearchResponse {
@@ -52,6 +52,24 @@ export class SpotifySearchService {
         albums: respuesta.albums?.items || [], 
         artists: respuesta.artists?.items || [], 
         playlists: respuesta.playlists?.items || [] 
+      })),
+      catchError(() => of({
+        tracks: [
+          {
+            id: '1',
+            name: `Resultado para: ${consulta}`,
+            duration_ms: 210000,
+            artists: [{ id: '1', name: 'Artista Demo' }],
+            album: { 
+              id: '1', 
+              name: 'Album Demo',
+              images: [{ url: 'https://via.placeholder.com/300x300/1db954/ffffff?text=DEMO', height: 300, width: 300 }]
+            }
+          }
+        ],
+        albums: [],
+        artists: [],
+        playlists: []
       }))
     );
   }
