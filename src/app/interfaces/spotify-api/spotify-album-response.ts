@@ -1,5 +1,4 @@
-// src/app/interfaces/spotify-api/spotify-album-response.ts
-import { SpotifyArtistResponse } from "./spotify-artist-response"; // <-- Necesaria
+import { SpotifyArtistResponse } from "./spotify-artist-response"; 
 import { SpotifyImageResponse } from "./spotify-image-response";
 import { SpotifyTrackResponse } from "./spotify-track-response";
 
@@ -10,11 +9,7 @@ export interface SpotifyAlbumResponse {
   href: string;
   images: SpotifyImageResponse[];
   
-  // --- ¡ARREGLO 3! ---
-  // Esta propiedad faltaba para que .artists.at(0) funcione
   artists: SpotifyArtistResponse[]; 
-
-  // (Esta la dejamos por si la respuesta completa la trae)
   tracks?: {
     href: string;
     total: number;

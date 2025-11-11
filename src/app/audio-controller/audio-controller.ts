@@ -14,7 +14,6 @@ export class AudioController {
   public currentTime = this.audioService.currentTime;
   public duration = this.audioService.duration;
 
-  // Métodos que el HTML llamará
   onTogglePlayPause() {
     this.audioService.togglePlayPause();
   }

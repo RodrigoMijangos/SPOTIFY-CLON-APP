@@ -52,6 +52,7 @@ export class SpotifyAlbumService {
             images: mappedImages,
             href: apiresponse.href,
             tracks: mappedTracks,
+            artists: apiresponse.artists
           }
         }
       )

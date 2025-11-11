@@ -1,4 +1,3 @@
-// src/app/player/player.ts
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { SpotifyAlbumService } from '../services/spotify-api/spotify-album-service';
 import { Album } from '../interfaces/album';
@@ -8,11 +7,7 @@ import { SpotifySearchService } from '../services/spotify-api/spotify-search';
 import { SpotifyArtistResponse } from '../interfaces/spotify-api/spotify-artist-response';
 import { SpotifyTrackResponse } from '../interfaces/spotify-api/spotify-track-response';
 import { SpotifyAlbumResponse } from '../interfaces/spotify-api/spotify-album-response';
-
-// --- ¡ARREGLO 1! ---
-// La ruta correcta a tu servicio de audio
 import { AudioService } from '../services/audio';
-// La ruta correcta a tu interfaz de Track
 import { Track } from '../interfaces/track'; 
 
 @Component({
@@ -36,7 +31,7 @@ export class Player implements OnInit {
   public isSearching = signal(false);
 
   constructor() {
-    this.album$ = this._spotifyAlbum.getAlbum('4aawyAB9vmqN3uQ7FjRGTy'); // Pitbull
+    this.album$ = this._spotifyAlbum.getAlbum('4aawyAB9vmqN3uQ7FjRGTy'); 
   }
 
   ngOnInit(): void {
@@ -58,7 +53,6 @@ export class Player implements OnInit {
 
     this.searchService.search(trimmedQuery).subscribe(response => {
       console.log(response);
-      // Filtramos canciones que SÍ tengan preview_url
       this.tracks.set(response.tracks.items.filter(track => track.preview_url));
       this.artists.set(response.artists.items);
       this.albums.set(response.albums.items);
@@ -67,17 +61,14 @@ export class Player implements OnInit {
 
   playTrack(track: SpotifyTrackResponse) {
     console.log('Reproduciendo:', track.name);
-    // El 'as Track' es para que coincidan las interfaces
     this.audioService.playSong(track as Track); 
   }
 
   goToAlbum(id: string) {
-    console.log('Navegando al álbum:', id);
-    // PRÓXIMO PASO: this.router.navigate(['/album', id]);
+    this.router.navigate(['/album', id]);
   }
 
   goToArtist(id: string) {
     console.log('Navegando al artista:', id);
-    // PRÓXIMO PASO: this.router.navigate(['/artist', id]);
   }
 }

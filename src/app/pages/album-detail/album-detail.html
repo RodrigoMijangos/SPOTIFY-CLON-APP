@@ -1,0 +1,29 @@
+@if (album$ | async; as album) {
+  <div class="detail-wrapper">
+    
+    <div class="detail-header">
+      <img [src]="album.images.at(0)?.url" alt="{{ album.name }}" class="detail-image">
+      <div class="detail-info">
+        <p>Álbum</p>
+        <h1>{{ album.name }}</h1>
+        <p class="subtitle">{{ album.artists.at(0)?.name }} • {{ album.total_tracks }} canciones</p>
+      </div>
+    </div>
+
+    <div class="detail-track-list">
+      @for (track of album.tracks; track track.id; let i = $index) {
+        <div class="track-item card" (click)="playTrack(track)">
+          <span class="track-number">{{ i + 1 }}</span>
+          <div class="track-details">
+            <span class="card-title">{{ track.name }}</span>
+            <span class="card-subtitle">{{ track.artists.at(0)?.name }}</span>
+          </div>
+        </div>
+      }
+      @if (album.tracks.length === 0) {
+        <p class="subtitle">Este álbum no tiene canciones reproducibles (sin preview_url).</p>
+      }
+    </div>
+
+  </div>
+}

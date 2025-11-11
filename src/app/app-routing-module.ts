@@ -5,6 +5,7 @@ import { StaticContainer } from './secondary/static-container/static-container';
 import { HomeChild } from './secondary/home-child/home-child';
 import { FirstChild } from './secondary/first-child/first-child';
 import { SecondChild } from './secondary/second-child/second-child';
+import { AlbumDetail } from './pages/album-detail/album-detail';
 
 const routes: Routes = [
 
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'second',
         component: SecondChild
+      },
+      {
+        path: 'album/:id',
+    component: AlbumDetail
       }
     ]
   }
