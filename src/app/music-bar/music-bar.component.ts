@@ -11,7 +11,7 @@ import { Track } from '../core/models/track.model';
       <!-- Información de la canción -->
       <div class="track-info">
         <div class="track-image">
-          <img [src]="currentTrack.album?.images?.[2]?.url || 'assets/default-album.png'" 
+          <img [src]="currentTrack.album.images[2].url || 'assets/default-album.png'" 
                [alt]="currentTrack.name">
         </div>
         <div class="track-details">
