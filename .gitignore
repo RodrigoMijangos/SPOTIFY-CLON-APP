@@ -44,4 +44,4 @@ Thumbs.db
 /public/media
 /public/font-awesome
 
-/src/environments
+/src/environments/*.local.ts
