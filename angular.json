@@ -72,7 +72,8 @@
               "buildTarget": "EXAMPLE_APP:build:production"
             },
             "development": {
-              "buildTarget": "EXAMPLE_APP:build:development"
+              "buildTarget": "EXAMPLE_APP:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

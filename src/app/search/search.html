@@ -1,197 +1,152 @@
 <div class="search-container">
-  <!-- Barra de búsqueda -->
   <div class="search-header">
     <div class="search-bar">
-      <input 
-        type="text" 
-        placeholder="¿Qué te apetece escuchar?"
-        class="search-input"
-        [(ngModel)]="searchQuery"
-        (input)="onSearchInput($event)"
-        autocomplete="off"
-      >
-      @if (searchQuery) {
-        <button class="clear-btn" (click)="clearSearch()" title="Limpiar búsqueda">×</button>
-      }
+      <input type="text" class="search-input" placeholder="¿Qué quieres escuchar?" [value]="searchQuery"
+        (keyup)="onSearchInput($event)">
+      <button *ngIf="searchQuery" class="clear-btn" (click)="clearSearch()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
   </div>
 
-  <!-- Loading -->
-  @if (isSearching) {
-    <div class="loading-section">
-      <div class="loading-spinner">
-        <i class="fa-solid fa-spinner fa-spin"></i>
-      </div>
-      <p>Buscando...</p>
-    </div>
-  }
+  <div class="tabs-container"
+    style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 0 20px;">
+    <button class="tab-btn" [style.background]="activeTab === 'tracks' ? '#333' : 'transparent'" [style.color]="'white'"
+      [style.border]="'none'" [style.padding]="'8px 16px'" [style.border-radius]="'20px'" [style.cursor]="'pointer'"
+      (click)="setActiveTab('tracks')">Canciones</button>
+    <button class="tab-btn" [style.background]="activeTab === 'albums' ? '#333' : 'transparent'" [style.color]="'white'"
+      [style.border]="'none'" [style.padding]="'8px 16px'" [style.border-radius]="'20px'" [style.cursor]="'pointer'"
+      (click)="setActiveTab('albums')">Álbumes</button>
+    <button class="tab-btn" [style.background]="activeTab === 'artists' ? '#333' : 'transparent'"
+      [style.color]="'white'" [style.border]="'none'" [style.padding]="'8px 16px'" [style.border-radius]="'20px'"
+      [style.cursor]="'pointer'" (click)="setActiveTab('artists')">Artistas</button>
+  </div>
 
-  <!-- Resultados de búsqueda -->
-  @if (showResults && !isSearching) {
-    <div class="search-results">
-      
-      <!-- Pestañas de navegación -->
-      <div class="tabs-container">
-        <button 
-          class="tab-btn"
-          [class.active]="activeTab === 'tracks'"
-          (click)="setActiveTab('tracks')">
-          Canciones
-        </button>
-        <button 
-          class="tab-btn"
-          [class.active]="activeTab === 'albums'"
-          (click)="setActiveTab('albums')">
-          Álbumes
-        </button>
-        <button 
-          class="tab-btn"
-          [class.active]="activeTab === 'artists'"
-          (click)="setActiveTab('artists')">
-          Artistas
-        </button>
-      </div>
-
-      <!-- Contenido de Canciones -->
-      @if (activeTab === 'tracks' && searchResults.tracks?.length > 0) {
-        <div class="tracks-section">
-          <!-- Canción destacada -->
-          <div class="main-player">
-            <div class="player-background" [style.background-image]="'url(' + (searchResults.tracks[0].album?.images?.[0]?.url || '') + ')'">
-              <div class="player-overlay">
-                <div class="album-art">
-                  <img [src]="searchResults.tracks[0].album?.images?.[0]?.url || ''" [alt]="searchResults.tracks[0].name">
-                </div>
-                
-                <div class="track-info">
-                  <h1>{{ searchResults.tracks[0].name }}</h1>
-                  <p>{{ obtenerNombresArtistas(searchResults.tracks[0].artists) }}</p>
-                </div>
-                
-                <div class="player-controls">
-                <button class="control-btn" (click)="cancionAnterior()">
-                  <i class="fa-solid fa-backward-step"></i>
-                </button>
-                
-                <button class="play-btn" (click)="reproducirCancion(searchResults.tracks[0])">
-                  <i class="fa-solid fa-play"></i>
-                </button>
-                
-                <button class="control-btn" (click)="siguienteCancion()">
-                  <i class="fa-solid fa-forward-step"></i>
-                </button>
-              </div>
+  <div class="search-results" *ngIf="showResults">
+    <!-- Contenido de Canciones -->
+    <div *ngIf="activeTab === 'tracks' && searchResults.tracks?.length > 0" class="tracks-section">
+      <!-- Canción destacada -->
+      <div class="main-player" *ngIf="searchResults.tracks[0]">
+        <div class="player-background"
+          [style.background-image]="'url(' + (searchResults.tracks[0].album?.images?.[0]?.url || '') + ')'">
+          <div class="player-overlay">
+            <div class="album-art">
+              <img [src]="searchResults.tracks[0].album?.images?.[0]?.url || ''" [alt]="searchResults.tracks[0].name">
             </div>
-          </div>
-        </div>
 
-          <!-- Lista de todas las canciones -->
-          <h2>Canciones</h2>
-          <div class="tracks-list">
-            @for (cancion of searchResults.tracks; track cancion.id) {
-              <div class="track-item">
-                <div class="track-number">{{ $index + 1 }}</div>
-                <div class="track-image">
-                  <img [src]="cancion.album?.images?.[2]?.url || ''" [alt]="cancion.name">
-                </div>
-                <div class="track-details" (click)="reproducirCancion(cancion)">
-                  <h4>{{ cancion.name }} @if(cancion.preview_url) {<span class="preview-badge">♫</span>}</h4>
-                  <p>{{ obtenerNombresArtistas(cancion.artists) }}</p>
-                </div>
-                <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      <!-- Contenido de Álbumes -->
-      @if (activeTab === 'albums' && searchResults.albums?.length > 0) {
-        <div class="albums-section">
-          <h2>Álbumes</h2>
-          <div class="albums-grid">
-            @for (album of searchResults.albums; track album.id) {
-              <div class="album-card">
-                <div class="album-image">
-                  <img [src]="album.images?.[0]?.url || ''" [alt]="album.name">
-                </div>
-                <div class="album-info">
-                  <h3>{{ album.name }}</h3>
-                  <p>{{ obtenerNombresArtistas(album.artists) }}</p>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      <!-- Contenido de Artistas -->
-      @if (activeTab === 'artists' && searchResults.artists?.length > 0) {
-        <div class="artists-section">
-          <h2>Artistas</h2>
-          <div class="artists-grid">
-            @for (artist of searchResults.artists; track artist.id) {
-              <div class="artist-card">
-                <div class="artist-image">
-                  <img [src]="artist.images?.[0]?.url || ''" [alt]="artist.name">
-                </div>
-                <div class="artist-info">
-                  <h3>{{ artist.name }}</h3>
-                  <p>Artista</p>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-      
-      <!-- Sin resultados -->
-      @if (showResults && ((activeTab === 'tracks' && (!searchResults.tracks || searchResults.tracks.length === 0)) || 
-           (activeTab === 'albums' && (!searchResults.albums || searchResults.albums.length === 0)) || 
-           (activeTab === 'artists' && (!searchResults.artists || searchResults.artists.length === 0)))) {
-        <div class="no-results-message">
-          <div class="message-content">
-            <i class="fa fa-search" style="font-size: 48px; color: #666; margin-bottom: 16px;"></i>
-            <h3>No hay resultados</h3>
-            <p>Intenta con otro término de búsqueda</p>
-          </div>
-        </div>
-      }
-
-    </div>
-  }
-
-  <!-- Estado inicial -->
-  @if (!showResults && !isSearching && !searchQuery) {
-    <div class="default-view">
-      <div class="default-player">
-        <div class="default-background">
-          <div class="default-overlay">
-            <div class="default-album">
-              <i class="fa fa-music"></i>
+            <div class="track-info">
+              <h1>{{ searchResults.tracks[0].name }}</h1>
+              <p>{{ obtenerNombresArtistas(searchResults.tracks[0].artists) }}</p>
             </div>
-            
-            <div class="default-info">
-              <h1>Tu música, tu mundo</h1>
-              <p>Encuentra millones de canciones</p>
-            </div>
-            
-            <div class="default-controls">
-              <button class="control-btn" disabled>
+
+            <div class="player-controls">
+              <button class="control-btn" (click)="cancionAnterior()">
                 <i class="fa-solid fa-backward-step"></i>
               </button>
-              
-              <button class="play-btn" disabled>
+
+              <button class="play-btn" (click)="reproducirCancion(searchResults.tracks[0])">
                 <i class="fa-solid fa-play"></i>
               </button>
-              
-              <button class="control-btn" disabled>
+
+              <button class="control-btn" (click)="siguienteCancion()">
                 <i class="fa-solid fa-forward-step"></i>
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Lista de todas las canciones -->
+      <h2>Canciones</h2>
+      <div class="tracks-list">
+        <div *ngFor="let cancion of searchResults.tracks; let i = index" class="track-item">
+          <div class="track-number">{{ i + 1 }}</div>
+          <div class="track-image">
+            <img [src]="cancion.album?.images?.[2]?.url || ''" [alt]="cancion.name">
+          </div>
+          <div class="track-details" (click)="reproducirCancion(cancion)">
+            <h4>{{ cancion.name }} <span *ngIf="cancion.preview_url" class="preview-badge">♫</span></h4>
+            <p>{{ obtenerNombresArtistas(cancion.artists) }}</p>
+          </div>
+          <div class="track-duration">{{ formatearDuracion(cancion.duration_ms) }}</div>
+        </div>
+      </div>
     </div>
-  }
+
+    <!-- Contenido de Álbumes -->
+    <div *ngIf="activeTab === 'albums' && searchResults.albums?.length > 0" class="albums-section">
+      <h2>Álbumes</h2>
+      <div class="albums-grid">
+        <div *ngFor="let album of searchResults.albums" class="album-card">
+          <div class="album-image">
+            <img [src]="album.images?.[0]?.url || ''" [alt]="album.name">
+          </div>
+          <div class="album-info">
+            <h3>{{ album.name }}</h3>
+            <p>{{ obtenerNombresArtistas(album.artists) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido de Artistas -->
+    <div *ngIf="activeTab === 'artists' && searchResults.artists?.length > 0" class="artists-section">
+      <h2>Artistas</h2>
+      <div class="artists-grid">
+        <div *ngFor="let artist of searchResults.artists" class="artist-card">
+          <div class="artist-image">
+            <img [src]="artist.images?.[0]?.url || ''" [alt]="artist.name">
+          </div>
+          <div class="artist-info">
+            <h3>{{ artist.name }}</h3>
+            <p>Artista</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin resultados -->
+    <div *ngIf="showResults && ((activeTab === 'tracks' && (!searchResults.tracks || searchResults.tracks.length === 0)) || 
+                 (activeTab === 'albums' && (!searchResults.albums || searchResults.albums.length === 0)) || 
+                 (activeTab === 'artists' && (!searchResults.artists || searchResults.artists.length === 0)))"
+      class="no-results-message">
+      <div class="message-content">
+        <i class="fa fa-search" style="font-size: 48px; color: #666; margin-bottom: 16px;"></i>
+        <h3>No hay resultados</h3>
+        <p>Intenta con otro término de búsqueda</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado inicial -->
+  <div *ngIf="!showResults && !isSearching && !searchQuery" class="default-view">
+    <div class="default-player">
+      <div class="default-background">
+        <div class="default-overlay">
+          <div class="default-album">
+            <i class="fa fa-music"></i>
+          </div>
+
+          <div class="default-info">
+            <h1>Tu música, tu mundo</h1>
+            <p>Encuentra millones de canciones</p>
+          </div>
+
+          <div class="default-controls">
+            <button class="control-btn" disabled>
+              <i class="fa-solid fa-backward-step"></i>
+            </button>
+
+            <button class="play-btn" disabled>
+              <i class="fa-solid fa-play"></i>
+            </button>
+
+            <button class="control-btn" disabled>
+              <i class="fa-solid fa-forward-step"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

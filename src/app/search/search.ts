@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
 import { SpotifyApiService } from '../core/services/spotify-api.service';
 import { AudioService } from '../core/services/audio.service';
@@ -8,8 +9,10 @@ import { Track } from '../core/models/track.model';
   selector: 'app-search',
   standalone: false,
   templateUrl: './search.html',
+  changeDetection: ChangeDetectionStrategy.Default,
   styles: [`
     .search-container { background: #121212; color: white; min-height: 100vh; padding-bottom: 120px; padding-top: 20px; }
+    .search-results { display: block; width: 100%; padding: 0 20px; }
     
     .search-header { margin-bottom: 32px; padding: 0 24px; }
     .search-bar { position: relative; max-width: 400px; margin: 0 auto; }
@@ -108,14 +111,16 @@ export class SearchComponent implements OnInit, OnDestroy {
   isSearching = false;
   showResults = false;
   activeTab: 'tracks' | 'albums' | 'artists' = 'tracks';
-  
+
   private searchSubject = new Subject<string>();
   private searchSubscription!: Subscription;
 
   constructor(
     private spotify: SpotifyApiService,
-    private audio: AudioService
-  ) {}
+    private audio: AudioService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.searchSubscription = this.searchSubject.pipe(
@@ -134,6 +139,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       })
     ).subscribe({
       next: (results) => {
+        console.log('Resultados recibidos en componente:', results);
         this.searchResults = results;
         if (results.tracks?.length > 0 || results.albums?.length > 0 || results.artists?.length > 0) {
           this.audio.setPlaylist(results.tracks);
@@ -142,10 +148,12 @@ export class SearchComponent implements OnInit, OnDestroy {
           this.showResults = false;
         }
         this.isSearching = false;
+        this.cdr.detectChanges(); // Force update
       },
       error: () => {
         this.isSearching = false;
         this.showResults = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -154,15 +162,15 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.searchSubscription?.unsubscribe();
   }
 
-  onSearchInput(event: any): void { 
-    this.searchQuery = event.target.value; 
-    this.searchSubject.next(this.searchQuery); 
+  onSearchInput(event: any): void {
+    this.searchQuery = event.target.value;
+    this.searchSubject.next(this.searchQuery);
   }
-  
-  clearSearch(): void { 
-    this.searchQuery = ''; 
-    this.showResults = false; 
-    this.searchResults = { tracks: [], albums: [], artists: [] }; 
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.showResults = false;
+    this.searchResults = { tracks: [], albums: [], artists: [] };
   }
 
   reproducirCancion(cancion: any): void {
@@ -173,12 +181,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.audio.togglePlayPause();
   }
 
-  cancionAnterior(): void { 
-    this.audio.previous(); 
+  cancionAnterior(): void {
+    this.audio.previous();
   }
-  
-  siguienteCancion(): void { 
-    this.audio.next(); 
+
+  siguienteCancion(): void {
+    this.audio.next();
   }
 
   setActiveTab(tab: 'tracks' | 'albums' | 'artists'): void {
@@ -199,7 +207,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   formatearDuracion(duracion: number): string {
     if (!duracion) return '0:00';
-    const minutos = Math.floor(duracion / 60000), segundos = Math.floor((duracion % 60000) / 1000);
+    const minutos = Math.floor(duracion / 60000);
+    const segundos = Math.floor((duracion % 60000) / 1000);
     return `${minutos}:${segundos.toString().padStart(2, '0')}`;
   }
   obtenerNombresArtistas(artistas: any[]): string { return artistas?.map(artista => artista.name).join(', ') || 'Artista desconocido'; }

@@ -19,7 +19,10 @@ export class App implements OnInit{
   ngOnInit(): void {
     this._cookieStorage.deleteKeyValue('access_token');
     this._spotifyLogin.getAccessToken().subscribe({
-      next: (response) => console.log('Token obtenido correctamente'),
+      next: (response) => {
+        console.log('Token obtenido correctamente');
+        this._cookieStorage.setKey('access_token', response.access_token, new Date(new Date().getTime() + 3600 * 1000));
+      },
       error: () => {
         console.log('Usando datos demo. Para usar Spotify real:');
         console.log('1. Ve a https://developer.spotify.com/dashboard');

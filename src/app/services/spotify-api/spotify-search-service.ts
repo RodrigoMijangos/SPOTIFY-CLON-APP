@@ -42,35 +42,38 @@ export interface SearchResult {
 })
 export class SpotifySearchService {
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) { }
 
   buscar(consulta: string, tipo: string = 'track', limite: number = 20): Observable<SearchResult> {
     const parametros = new HttpParams().set('q', consulta).set('type', tipo).set('limit', limite.toString());
     return this._http.get<SpotifySearchResponse>(`${environment.API_URL}/search`, { params: parametros }).pipe(
-      map(respuesta => ({ 
-        tracks: respuesta.tracks?.items || [], 
-        albums: respuesta.albums?.items || [], 
-        artists: respuesta.artists?.items || [], 
-        playlists: respuesta.playlists?.items || [] 
+      map(respuesta => ({
+        tracks: respuesta.tracks?.items || [],
+        albums: respuesta.albums?.items || [],
+        artists: respuesta.artists?.items || [],
+        playlists: respuesta.playlists?.items || []
       })),
-      catchError(() => of({
-        tracks: [
-          {
-            id: '1',
-            name: `Resultado para: ${consulta}`,
-            duration_ms: 210000,
-            artists: [{ id: '1', name: 'Artista Demo' }],
-            album: { 
-              id: '1', 
-              name: 'Album Demo',
-              images: [{ url: 'https://via.placeholder.com/300x300/1db954/ffffff?text=DEMO', height: 300, width: 300 }]
+      catchError((error) => {
+        console.error('Error en búsqueda Spotify:', error);
+        return of({
+          tracks: [
+            {
+              id: '1',
+              name: `Resultado para: ${consulta}`,
+              duration_ms: 210000,
+              artists: [{ id: '1', name: 'Artista Demo' }],
+              album: {
+                id: '1',
+                name: 'Album Demo',
+                images: [{ url: 'https://via.placeholder.com/300x300/1db954/ffffff?text=DEMO', height: 300, width: 300 }]
+              }
             }
-          }
-        ],
-        albums: [],
-        artists: [],
-        playlists: []
-      }))
+          ],
+          albums: [],
+          artists: [],
+          playlists: []
+        });
+      })
     );
   }
 

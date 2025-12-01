@@ -1,7 +1,20 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { CookiesStorageService } from '../../services/general/cookies-storage-service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // Simple pass-through interceptor
-  // SpotifyApiService handles authentication internally
-  return next(req);
+  const cookieService = inject(CookiesStorageService);
+  const token = cookieService.getKeyValue('access_token');
+
+  let request = req;
+
+  if (token) {
+    request = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  return next(request);
 };
